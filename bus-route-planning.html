@@ -298,7 +298,7 @@
         
         .subway-stops {
             margin-top: 8px;
-            padding-left: 42px;
+            padding-left: 12px;
             font-size: 12px;
             color: #9cdcfe;
         }
@@ -314,6 +314,27 @@
         
         .subway-stops-header:hover {
             color: #4a9eff;
+            text-decoration: underline;
+        }
+        
+        .bus-stops {
+            margin-top: 8px;
+            padding-left: 12px;
+            font-size: 12px;
+            color: #9cdcfe;
+        }
+        
+        .bus-stops-header {
+            cursor: pointer;
+            color: #dcdcaa;
+            font-size: 12px;
+            margin-bottom: 4px;
+            user-select: none;
+            transition: color 0.2s;
+        }
+        
+        .bus-stops-header:hover {
+            color: #b8b869;
             text-decoration: underline;
         }
         
@@ -356,6 +377,37 @@
         
         .autocomplete-container {
             position: relative;
+        }
+        
+        .clear-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border: none;
+            background: #666;
+            color: #d4d4d4;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s, color 0.2s;
+            z-index: 10;
+            line-height: 1;
+            padding: 0;
+        }
+        
+        .clear-btn:hover {
+            background: #0078d4;
+            color: white;
+        }
+        
+        .clear-btn:active {
+            transform: translateY(-50%) scale(0.9);
         }
         
         .amap-sug-result {
@@ -449,7 +501,8 @@
                     <span class="input-item-text">起点</span>
                 </div>
                 <div class="autocomplete-container">
-                    <input id='startinput' type="text" placeholder="输入起点地址或地点名称">
+                    <input id='startinput' type="text" placeholder="输入起点名称">
+                    <button class="clear-btn" onclick="clearInput('startinput')" title="清除内容">×</button>
                 </div>
             </div>
             <div class="swap-container">
@@ -460,7 +513,8 @@
                     <span class="input-item-text">终点</span>
                 </div>
                 <div class="autocomplete-container">
-                    <input id='endinput' type="text" placeholder="输入终点地址或地点名称">
+                    <input id='endinput' type="text" placeholder="输入终点名称">
+                    <button class="clear-btn" onclick="clearInput('endinput')" title="清除内容">×</button>
                 </div>
             </div>
         </div>
@@ -834,6 +888,36 @@
             }
         }
         
+        // 清除输入框内容
+        function clearInput(inputId) {
+            var input = document.getElementById(inputId);
+            input.value = '';
+            
+            // 清除对应的位置变量
+            if (inputId === 'startinput') {
+                startLocation = null;
+            } else if (inputId === 'endinput') {
+                endLocation = null;
+            }
+            
+            // 隐藏自动完成建议
+            hideAllSuggestions();
+            
+            // 保存到本地存储
+            saveStartEnd();
+            
+            // 让输入框获得焦点
+            input.focus();
+        }
+        
+        // 隐藏所有建议下拉框
+        function hideAllSuggestions() {
+            var suggestions = document.querySelectorAll('.amap-sug-result');
+            suggestions.forEach(function(suggestion) {
+                suggestion.style.display = 'none';
+            });
+        }
+        
         // 交换起点和终点
         function swapStartEnd() {
             var startInput = document.getElementById('startinput');
@@ -1023,13 +1107,86 @@
             if (prevIsSubway && prevSegment && prevSegment.transit && prevSegment.transit.exit && prevSegment.transit.exit.name) {
                 prevHasExit = true;
             }
-            
-
-            
+                        
             // 只有当前后都是地铁且前一个地铁没有出站口时，才是站内换乘
             return prevIsSubway && nextIsSubway && !prevHasExit;
         }
         
+        // 格式化公交路段的显示内容
+        function formatBusInstruction(segment) {
+            try {
+                var instruction = segment.instruction || '';
+                
+                // 尝试从不同字段提取公交信息
+                var busInfo = {
+                    line: '',          // 公交线路
+                    direction: '',     // 方向
+                    stations: '',      // 乘坐站数
+                    exit: ''          // 出站口
+                };
+                
+                // 优先从transit.lines数组获取线路名称（类似地铁的处理逻辑）
+                if (segment.transit && segment.transit.lines && segment.transit.lines.length > 0) {
+                    var firstLine = segment.transit.lines[0];
+                    if (firstLine.name) {
+                        busInfo.line = firstLine.name;
+                    }
+                }
+                
+                // 如果没有从lines获取到线路名，再从指令中提取
+                if (!busInfo.line) {
+                    // 从指令中提取公交信息
+                    var lineMatch = instruction.match(/(\d+路|\d+号线|[A-Z\d]+路|[A-Z\d]+线|\w+公交)/i);
+                    if (lineMatch) {
+                        busInfo.line = lineMatch[1];
+                    }
+                }
+                
+                // 优先从via_stops中提取方向信息（下一个站点的名称）
+                if (segment.transit && segment.transit.via_stops && segment.transit.via_stops.length > 0) {
+                    // 获取第一个途径站点的名称作为方向
+                    var nextStop = segment.transit.via_stops[0];
+                    if (nextStop && nextStop.name) {
+                        busInfo.direction = nextStop.name;
+                    } else if (segment.transit.off_station) {
+                        busInfo.direction = segment.transit.off_station.name;
+                    }
+                }
+                
+                // 尝试获取起点和终点站
+                if (segment.transit) {
+                    if (segment.transit.on_station) {
+                        busInfo.fromStation = segment.transit.on_station.name;
+                    }
+                    if (segment.transit.off_station) {
+                        busInfo.off_station = segment.transit.off_station.name + '站';
+                    }
+                }
+                
+                // 构建格式化指令
+                var parts = [];
+                
+                if (busInfo.line) {
+                    parts.push(busInfo.line);
+                }
+                
+                if (busInfo.direction) {
+                    parts.push('下一站：' + busInfo.direction);
+                }
+                
+                if (busInfo.stations) {
+                    parts.push('乘坐' + busInfo.stations);
+                }
+                
+                var result = parts.join('，');
+                
+                return result || instruction; // 如果格式化失败，返回原始指令
+                
+            } catch (error) {
+                return segment.instruction; // 出错时返回原始指令
+            }
+        }
+
         // 格式化地铁路段的显示内容
         function formatSubwayInstruction(segment) {
             try {
@@ -1042,13 +1199,33 @@
                     stations: '',      // 乘坐站数
                     exit: ''          // 出站口
                 };
-                
-                // 从指令中提取线路信息
-                var lineMatch = instruction.match(/(\d+号线|\w+线|Line\s*\w+)/i);
-                if (lineMatch) {
-                    subwayInfo.line = lineMatch[1];
+                                           
+                // 优先从transit.lines数组获取线路名称
+                if (segment.transit && segment.transit.lines && segment.transit.lines.length > 0) {
+                    var firstLine = segment.transit.lines[0];
+                    if (firstLine.name) {
+                        subwayInfo.line = firstLine.name;
+                    }
                 }
                 
+                // 如果没有从lines获取到线路名，再从指令中提取
+                if (!subwayInfo.line) {
+                    var lineMatch = instruction.match(/(\d+号线|\w+线|Line\s*\w+)/i);
+                    if (lineMatch) {
+                        subwayInfo.line = lineMatch[1];
+                    }
+                }
+                
+                // 尝试获取起点和终点站
+                if (segment.transit) {
+                    if (segment.transit.on_station) {
+                        subwayInfo.fromStation = segment.transit.on_station.name;
+                    }
+                    if (segment.transit.off_station) {
+                        subwayInfo.off_station = segment.transit.off_station.name + '站';
+                    }
+                }
+
                 // 优先从via_stops中提取方向信息（下一个站点的名称）
                 if (segment.transit && segment.transit.via_stops && segment.transit.via_stops.length > 0) {
                     // 获取第一个途径站点的名称作为方向
@@ -1056,68 +1233,10 @@
                     if (nextStop && nextStop.name) {
                         subwayInfo.direction = nextStop.name;
 
-                    }
-                }
-                
-                // 如果via_stops中没有找到，再从指令中提取
-                if (!subwayInfo.direction) {
-                    var directionMatch = instruction.match(/(?:往|向|开往|方向)([^，,，。]+)/);
-                    if (directionMatch) {
-                        subwayInfo.direction = directionMatch[1].trim();
-                    }
-                }
-                
-                // 从指令中提取乘坐站数（用于显示总数）
-                var stationsMatch = instruction.match(/(?:乘坐|经过|途径)(\d+)站/);
-                if (stationsMatch) {
-                    subwayInfo.totalStations = parseInt(stationsMatch[1]);
-                }
-                
-                // 从指令中提取终点站（下车点）
-                var destinationMatch = instruction.match(/(?:到达|在)([^站，,，。]+)站?(?:到达|下车)/);
-                if (destinationMatch) {
-                    subwayInfo.destination = destinationMatch[1] + '站';
-                } else if (instruction.match(/到达([^，,，。]+站)/)) {
-                    var destMatch = instruction.match(/到达([^，,，。]+站)/);
-                    if (destMatch) {
-                        subwayInfo.destination = destMatch[1];
-                    }
-                }
-                
-                // 优先从exit对象中提取出站口信息
-                if (segment.transit && segment.transit.exit && segment.transit.exit.name) {
-                    subwayInfo.exit = segment.transit.exit.name;
-
-                } else {
-                    // 如果exit对象中没有找到，再从指令中提取
-                    var exitMatch = instruction.match(/([A-Z0-9]+号?出站口|[A-Z0-9]+出站口|出站口[A-Z0-9]+)/i);
-                    if (exitMatch) {
-                        subwayInfo.exit = exitMatch[1];
-                    }
-                }
-                
-                // 尝试从transit字段获取更多信息
-                if (segment.transit) {
-                    // 尝试获取线路名称
-                    if (segment.transit.lines && segment.transit.lines.length > 0) {
-                        var firstLine = segment.transit.lines[0];
-                        if (firstLine.name) {
-                            subwayInfo.line = firstLine.name;
-                        }
-                    }
-                    
-                    // 尝试获取起点和终点站
-                    if (segment.transit.on_station) {
-                        subwayInfo.fromStation = segment.transit.on_station.name;
-                    }
-                    if (segment.transit.off_station) {
-                        subwayInfo.off_station = segment.transit.off_station.name + '站';
-                    }
-                    // 尝试获取方向信息
-                    if (segment.transit.direction) {
-                        subwayInfo.direction = segment.transit.direction;
-                    }
-                }
+                    } 
+                }  else {
+                    subwayInfo.direction = subwayInfo.off_station;
+                }    
                 
 
                 
@@ -1132,9 +1251,6 @@
                     parts.push('下一站：' + subwayInfo.direction);
                 }
                 
-                if (subwayInfo.stations) {
-                    parts.push('乘坐' + subwayInfo.stations);
-                }
                 
                 
                 var result = parts.join('，');
@@ -1313,6 +1429,65 @@
             }
         }
         
+        // 渲染公交站点列表
+        function renderBusStops(segment, segmentIndex, stepIndex) {
+            // 检查是否有公交站点信息
+            if (!segment.transit || !segment.transit.via_stops || segment.transit.via_stops.length === 0) {
+                return '';
+            }
+            
+            var uniqueId = 'bus-stops-' + segmentIndex + '-' + stepIndex;
+            var stops = segment.transit.via_stops;
+            var stopsHtml = '';
+            
+            // 添加on_station作为第一站（上车站）
+            if (segment.transit.on_station && segment.transit.on_station.name) {
+                var onStationName = segment.transit.on_station.name;
+                stopsHtml += `<div class="subway-stop-item" style="border-left-color: #dcdcaa; font-weight: bold;">${onStationName}</div>`;
+            }
+            
+            // 生成站点列表
+            stops.forEach(function(stop, index) {
+                stopsHtml += `<div class="subway-stop-item">${stop.name}</div>`;
+            });
+            
+            // 添加off_station作为最后一站
+            if (segment.transit.off_station && segment.transit.off_station.name) {
+                var offStationName = segment.transit.off_station.name;               
+                stopsHtml += `<div class="subway-stop-item"  style="border-left-color: #dcdcaa; font-weight: bold;">${offStationName}</div>`;
+            }
+            
+            // 计算总站点数（包括on_station和off_station）
+            var totalStops = stops.length;
+            if (segment.transit.on_station && segment.transit.on_station.name) {
+                totalStops++;
+            }
+            if (segment.transit.off_station && segment.transit.off_station.name) {
+                totalStops++;
+            }
+            // 途经站点数 = 总站点数 - 2（去掉上车站和下车站）
+            var viaStopsCount = Math.max(0, totalStops - 2);
+            
+            // 构建下车站信息（类似地铁的处理方式）
+            var stationInfoHtml = '';
+            if (segment.transit.off_station && segment.transit.off_station.name) {
+                var offStationName = segment.transit.off_station.name;
+                stationInfoHtml += `<div class="subway-stop-item final-destination" style="border-left-color: #dcdcaa;font-size: 12px;">下车站： ${offStationName}</div>`;
+            }
+            
+            return `
+                <div class="subway-stops">
+                    <div class="subway-stops-header" onclick="toggleBusStops('${uniqueId}')">
+                        ▶ 乘坐 ${viaStopsCount} 站
+                    </div>
+                    <div id="${uniqueId}" class="subway-stops-list">
+                        ${stopsHtml}
+                    </div>
+                </div>
+                ${stationInfoHtml}
+            `;
+        }
+
         // 渲染地铁站点列表
         function renderSubwayStops(segment, segmentIndex, stepIndex) {
             // 检查是否有地铁站点信息
@@ -1338,11 +1513,7 @@
             // 添加off_station作为最后一站
             if (segment.transit.off_station && segment.transit.off_station.name) {
                 var offStationName = segment.transit.off_station.name;
-                // 如果名称已经包含"站"字，直接使用；否则添加"站"
-                if (!offStationName.endsWith('站')) {
-                    offStationName += '站';
-                }
-                stopsHtml += `<div class="subway-stop-item">${offStationName}</div>`;
+                stopsHtml += `<div class="subway-stop-item"  style="border-left-color: #dcdcaa; font-weight: bold;">${offStationName}</div>`;
             }
             
             // 计算总站点数（包括on_station和off_station）
@@ -1395,22 +1566,68 @@
             `;
         }
         
+        // 切换公交站点列表显示
+        function toggleBusStops(uniqueId) {
+            var stopsList = document.getElementById(uniqueId);
+            
+            // 检查元素是否存在
+            if (!stopsList) {
+                console.warn('公交站点列表元素未找到: ' + uniqueId);
+                return;
+            }
+            
+            var header = stopsList.previousElementSibling;
+            
+            // 检查header是否存在
+            if (!header) {
+                console.warn('公交站点列表头部元素未找到');
+                return;
+            }
+            
+            var isExpanded = stopsList.classList.contains('expanded');
+            var stopsCount = Math.max(0, stopsList.children.length - 1); // 减去起始站，显示途径站数
+            
+            if (isExpanded) {
+                stopsList.classList.remove('expanded');
+                header.innerHTML = '▶ 乘坐 ' + stopsCount + ' 站';
+            } else {
+                stopsList.classList.add('expanded');
+                header.innerHTML = '▼ 乘坐 ' + stopsCount + ' 站';
+            }
+        }
+
         // 切换地铁站点列表显示
         function toggleSubwayStops(uniqueId) {
             var stopsList = document.getElementById(uniqueId);
+            
+            // 检查元素是否存在
+            if (!stopsList) {
+                console.warn('地铁站点列表元素未找到: ' + uniqueId);
+                return;
+            }
+            
             var header = stopsList.previousElementSibling;
             
-            if (stopsList.classList.contains('expanded')) {
+            // 检查header是否存在
+            if (!header) {
+                console.warn('地铁站点列表头部元素未找到');
+                return;
+            }
+            
+            var isExpanded = stopsList.classList.contains('expanded');
+            var stopsCount = Math.max(0, stopsList.children.length - 1); // 减去起始站，显示途径站数
+            
+            if (isExpanded) {
                 stopsList.classList.remove('expanded');
-                header.innerHTML = '▶ 途经 ' + stopsList.children.length + ' 个站点';
+                header.innerHTML = '▶ 乘坐 ' + stopsCount + ' 站';
             } else {
                 stopsList.classList.add('expanded');
-                header.innerHTML = '▼ 途经 ' + stopsList.children.length + ' 个站点';
+                header.innerHTML = '▼ 乘坐 ' + stopsCount + ' 站';
             }
         }
         
         // 渲染路线步骤
-        function renderSteps(segments) {
+        function renderSteps(segments, routeIndex) {
 
             var stepsHtml = '<div class="route-steps-content">';
             
@@ -1443,9 +1660,10 @@
 
                 }
                 
-                // 处理地铁路段的特殊显示格式
+                // 处理地铁路段和公交路段的特殊显示格式
                 var instruction = segment.instruction;
                 var subwayStopsHtml = '';
+                var busStopsHtml = '';
                 
                 // 如果是地铁路段，重新格式化显示内容
                 if (segment.transit_mode === 'SUBWAY' || 
@@ -1462,8 +1680,22 @@
 
                     }
                     
-                    // 生成地铁站点列表
-                    subwayStopsHtml = renderSubwayStops(segment, segments.length, index);
+                    // 生成地铁站点列表（使用routeIndex来确保ID唯一性）
+                    subwayStopsHtml = renderSubwayStops(segment, routeIndex, index);
+                }
+                // 如果是公交路段，重新格式化显示内容
+                else if (segment.transit_mode === 'BUS') {
+                    
+                    // 尝试从公交路段数据中提取信息，但去除"乘坐X站"部分
+                    var formattedInstruction = formatBusInstruction(segment);
+                    if (formattedInstruction) {
+                        // 移除"乘坐X站"部分，因为我们要用可折叠的站点列表替代
+                        instruction = formattedInstruction.replace(/，乘坐\d+站/, '').replace(/乘坐\d+站，/, '').replace(/乘坐\d+站/, '');
+
+                    }
+                    
+                    // 生成公交站点列表（使用routeIndex来确保ID唯一性）
+                    busStopsHtml = renderBusStops(segment, routeIndex, index);
                 }
                 
                 var stepHtml = `
@@ -1480,6 +1712,7 @@
                                 </div>
                             </div>
                             ${subwayStopsHtml}
+                            ${busStopsHtml}
                         </div>
                     </div>
                 `;
@@ -1522,7 +1755,7 @@
                         </div>
                     </div>
                     <div class="route-steps" id="route-steps-${index}">
-                        ${renderSteps(route.segments)}
+                        ${renderSteps(route.segments, index)}
                     </div>
                 </div>
             `;
