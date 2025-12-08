@@ -31,14 +31,15 @@
         
         .swap-container {
             display: flex;
+            justify-content: center;
             align-items: center;
-            padding-bottom: 12px;
-            margin-bottom: 15px;
+            margin: 0 0;
+            height: 200px;
         }
         
         .swap-btn {
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background-color: #4ec9b0;
             color: white;
@@ -68,6 +69,11 @@
             margin-bottom: 15px;
         }
         
+        .input-item-wide {
+            flex: 1;
+            margin-bottom: 15px;
+        }
+        
         .input-item-prepend {
             margin-bottom: 8px;
         }
@@ -78,9 +84,10 @@
             font-size: 14px;
         }
         
-        #cityinput, #startinput, #endinput, #departuretime {
+        #cityinput, #startinput, #endinput, #departuretime, #policy-select {
             width: 100%;
             padding: 12px;
+            padding-right: 70px;
             border: 1px solid #3e3e42;
             border-radius: 4px;
             font-size: 14px;
@@ -91,7 +98,12 @@
             transition: border-color 0.2s, background-color 0.2s;
         }
         
-        #cityinput:focus, #startinput:focus, #endinput:focus, #departuretime:focus {
+        #policy-select {
+            padding-right: 12px;
+            cursor: pointer;
+        }
+        
+        #cityinput:focus, #startinput:focus, #endinput:focus, #departuretime:focus, #policy-select:focus {
             outline: none;
             border-color: #0078d4;
             background-color: #404040;
@@ -381,7 +393,7 @@
         
         .clear-btn {
             position: absolute;
-            right: 8px;
+            right: 44px;
             top: 50%;
             transform: translateY(-50%);
             width: 20px;
@@ -408,6 +420,229 @@
         
         .clear-btn:active {
             transform: translateY(-50%) scale(0.9);
+        }
+        
+        .settings-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #3C3C3C;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s, transform 0.2s;
+            z-index: 1000;
+            line-height: 1;
+            padding: 0;
+        }
+        
+        .settings-btn:hover {
+            background-color: #3C3C3C;
+            transform: scale(1.05);
+        }
+        
+        .settings-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .settings-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .settings-modal.show {
+            display: flex;
+        }
+        
+        .settings-card {
+            background-color: #252526;
+            border: 1px solid #3e3e42;
+            border-radius: 8px;
+            padding: 30px;
+            max-width: 500px;
+            width: 80%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .settings-title {
+            color: #cccccc;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: #858585;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
+        }
+        
+        .close-btn:hover {
+            color: #d4d4d4;
+        }
+        
+        .setting-item {
+            margin-bottom: 20px;
+        }
+        
+        .setting-label {
+            display: block;
+            color: #cccccc;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .setting-input-group {
+            position: relative;
+        }
+        
+        .setting-input {
+            width: 100%;
+            padding: 12px;
+            padding-right: 35px;
+            border: 1px solid #3e3e42;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+            background-color: #3c3c3c;
+            color: #d4d4d4;
+            font-family: Arial, sans-serif, 'Courier New', monospace;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+        
+        .setting-input:focus {
+            outline: none;
+            border-color: #0078d4;
+            background-color: #404040;
+        }
+        
+        .setting-input::placeholder {
+            color: #858585;
+        }
+        
+        .save-settings-btn {
+            background-color: #3C3C3C;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: Arial, sans-serif, 'Courier New', monospace;
+            transition: background-color 0.2s;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .save-settings-btn:hover {
+            background-color: #3C3C3C;
+        }
+        
+        .autocomplete-dropdown {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 35px;
+            height: 100%;
+            border: none;
+            background: #666;
+            color: #d4d4d4;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+            z-index: 10;
+            padding: 0;
+        }
+        
+        .autocomplete-dropdown:hover {
+            background: #0078d4;
+            color: white;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #252526;
+            border: 1px solid #3e3e42;
+            border-radius: 4px;
+            min-width: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: none;
+        }
+        
+        .dropdown-menu.show {
+            display: block;
+        }
+        
+        .dropdown-item {
+            padding: 10px 15px;
+            color: #d4d4d4;
+            cursor: pointer;
+            border-bottom: 1px solid #3e3e42;
+            font-size: 13px;
+            transition: background-color 0.2s;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #3c3c3c;
+        }
+        
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+        
+        .dropdown-item.header {
+            color: #858585;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 8px 15px;
+            cursor: default;
+        }
+        
+        .dropdown-item.header:hover {
+            background-color: transparent;
         }
         
         .amap-sug-result {
@@ -459,24 +694,51 @@
             border: 1px solid #8c2d2d;
         }
         
-        .policy-selector {
-            margin-bottom: 15px;
-        }
-        
-        #policy-select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #3e3e42;
-            border-radius: 4px;
-            background-color: #3c3c3c;
-            color: #d4d4d4;
-            font-family: Arial, sans-serif, 'Courier New', monospace;
-        }
+
         
 
     </style>
 </head>
 <body>
+    <!-- 设置按钮 -->
+    <button class="settings-btn" onclick="openSettings()" title="设置常用地址">=</button>
+    
+    <!-- 设置弹窗 -->
+    <div id="settings-modal" class="settings-modal">
+        <div class="settings-card">
+            <div class="settings-header">
+                <h2 class="settings-title">设置常用地址</h2>
+                <button class="close-btn" onclick="closeSettings()">×</button>
+            </div>
+            
+            <div class="setting-item">
+                <label class="setting-label">家庭地址</label>
+                <div class="setting-input-group">
+                    <input id="home-input" type="text" class="setting-input" placeholder="输入家庭地址">
+                    <button class="clear-btn" onclick="clearSettingInput('home-input')" title="清除内容" style="right: 10px;">×</button>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <label class="setting-label">公司地址</label>
+                <div class="setting-input-group">
+                    <input id="company-input" type="text" class="setting-input" placeholder="输入公司地址">
+                    <button class="clear-btn" onclick="clearSettingInput('company-input')" title="清除内容" style="right: 10px;">×</button>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <label class="setting-label">收藏地址</label>
+                <div class="setting-input-group">
+                    <input id="favorite-input" type="text" class="setting-input" placeholder="输入收藏地址">
+                    <button class="clear-btn" onclick="clearSettingInput('favorite-input')" title="清除内容" style="right: 10px;">×</button>
+                </div>
+            </div>
+            
+            <button class="save-settings-btn" onclick="saveSettings()">保存设置</button>
+        </div>
+    </div>
+
     <div class="container">
         <h1 style="text-align: center; color: #cccccc; margin-bottom: 30px; font-weight: 300; font-size: 24px;">公交路线规划</h1>
         
@@ -485,53 +747,75 @@
                 <div class="input-item-prepend">
                     <span class="input-item-text">城市</span>
                 </div>
-                <input id='cityinput' type="text" placeholder="输入城市名称（如：北京、上海）">
+                <input id='cityinput' type="text" placeholder="输入城市名称" style="padding-right: 12px;">
             </div>
             <div class="input-item">
                 <div class="input-item-prepend">
                     <span class="input-item-text">出发时间</span>
                 </div>
-                <input id='departuretime' type="text" placeholder="例如：8、14:30、18:30">
+                <input id='departuretime' type="text" placeholder="例如：8、14:30、18:30" style="padding-right: 12px;">
+            </div>
+            <div class="input-item">
+                <div class="input-item-prepend">
+                    <span class="input-item-text">路线选择依据</span>
+                </div>
+                <select id="policy-select">
+                    <option value="LEAST_TIME">最快捷</option>
+                    <option value="LEAST_SWAP">最少换乘</option>
+                    <option value="LEAST_WALK">最少步行</option>
+                    <option value="MOST_COMFORT">最舒适</option>
+                    <option value="NO_SUBWAY">不乘地铁</option>
+                </select>
             </div>
         </div>
-        
         <div class="input-group">
-            <div class="input-item">
-                <div class="input-item-prepend">
-                    <span class="input-item-text">起点</span>
+            <div class="input-box" style="width: 90%;">
+                <div class="input-group">
+                    <div class="input-item-wide">
+                        <div class="input-item-prepend">
+                            <span class="input-item-text">起点</span>
+                        </div>
+                        <div class="autocomplete-container">
+                            <input id='startinput' type="text" placeholder="输入起点名称">
+                            <button class="clear-btn" onclick="clearInput('startinput')" title="清除内容">×</button>
+                            <button class="autocomplete-dropdown" onclick="toggleDropdown('start')" title="历史记录和常用地址">▼</button>
+                            <div id="start-dropdown" class="dropdown-menu">
+                                <div class="dropdown-item header">历史记录</div>
+                                <div id="start-history"></div>
+                                <div class="dropdown-item header">常用地址</div>
+                                <div class="dropdown-item" onclick="selectFromDropdown('start', 'home')">🏠 家</div>
+                                <div class="dropdown-item" onclick="selectFromDropdown('start', 'company')">🏢 公司</div>
+                                <div class="dropdown-item" onclick="selectFromDropdown('start', 'favorite')">⭐ 收藏</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="autocomplete-container">
-                    <input id='startinput' type="text" placeholder="输入起点名称">
-                    <button class="clear-btn" onclick="clearInput('startinput')" title="清除内容">×</button>
+                
+                <div class="input-group">
+                    <div class="input-item-wide">
+                        <div class="input-item-prepend">
+                            <span class="input-item-text">终点</span>
+                        </div>
+                        <div class="autocomplete-container">
+                            <input id='endinput' type="text" placeholder="输入终点名称">
+                            <button class="clear-btn" onclick="clearInput('endinput')" title="清除内容">×</button>
+                            <button class="autocomplete-dropdown" onclick="toggleDropdown('end')" title="历史记录和常用地址">▼</button>
+                            <div id="end-dropdown" class="dropdown-menu">
+                                <div class="dropdown-item header">历史记录</div>
+                                <div id="end-history"></div>
+                                <div class="dropdown-item header">常用地址</div>
+                                <div class="dropdown-item" onclick="selectFromDropdown('end', 'home')">🏠 家</div>
+                                <div class="dropdown-item" onclick="selectFromDropdown('end', 'company')">🏢 公司</div>
+                                <div class="dropdown-item" onclick="selectFromDropdown('end', 'favorite')">⭐ 收藏</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="swap-container">
-                <button id="swap-btn" class="swap-btn" onclick="swapStartEnd()" title="交换起终点">⇄</button>
-            </div>
-            <div class="input-item">
-                <div class="input-item-prepend">
-                    <span class="input-item-text">终点</span>
-                </div>
-                <div class="autocomplete-container">
-                    <input id='endinput' type="text" placeholder="输入终点名称">
-                    <button class="clear-btn" onclick="clearInput('endinput')" title="清除内容">×</button>
-                </div>
+            <div class="swap-container" style="width: 10%;">
+                <button id="swap-btn" class="swap-btn" onclick="swapStartEnd()" title="交换起终点">⇵</button>
             </div>
         </div>
-        
-        <div class="policy-selector">
-            <div class="input-item-prepend">
-                <span class="input-item-text">路线选择依据</span>
-            </div>
-            <select id="policy-select">
-                <option value="LEAST_TIME">最快捷</option>
-                <option value="LEAST_SWAP">最少换乘</option>
-                <option value="LEAST_WALK">最少步行</option>
-                <option value="MOST_COMFORT">最舒适</option>
-                <option value="NO_SUBWAY">不乘地铁</option>
-            </select>
-        </div>
-        
         <button id="search-btn" class="search-btn">规划路线</button>
         
         <div id="loading" class="loading hidden">
@@ -635,16 +919,7 @@
                 currentCity = savedCity;
             }
             
-            // 恢复上一次的起点和终点
-            var savedStart = localStorage.getItem('selectedStart');
-            if (savedStart) {
-                document.getElementById('startinput').value = savedStart;
-            }
-            
-            var savedEnd = localStorage.getItem('selectedEnd');
-            if (savedEnd) {
-                document.getElementById('endinput').value = savedEnd;
-            }
+            // 不恢复上一次的起点和终点，保持空白
             
             // 设置默认出发时间为当前时间
             setDefaultDepartureTime();
@@ -871,21 +1146,18 @@
                 currentCity = city.trim();
                 // 重新设置自动完成的城市
                 setupAutocomplete();
+                
+                // 如果设置弹窗是打开的，也要更新设置页面的自动完成
+                var modal = document.getElementById('settings-modal');
+                if (modal && modal.classList.contains('show')) {
+                    setupSettingsAutocomplete();
+                }
             }
         }
         
-        // 保存起点和终点
+        // 不再保存起点和终点到localStorage
         function saveStartEnd() {
-            var startValue = document.getElementById('startinput').value.trim();
-            var endValue = document.getElementById('endinput').value.trim();
-            
-            if (startValue) {
-                localStorage.setItem('selectedStart', startValue);
-            }
-            
-            if (endValue) {
-                localStorage.setItem('selectedEnd', endValue);
-            }
+            // 空函数，不再保存起点和终点
         }
         
         // 清除输入框内容
@@ -918,6 +1190,318 @@
             });
         }
         
+        // 打开设置弹窗
+        function openSettings() {
+            var modal = document.getElementById('settings-modal');
+            modal.classList.add('show');
+            
+            // 加载已保存的设置
+            loadSettings();
+            
+            // 设置自动完成功能
+            setupSettingsAutocomplete();
+        }
+        
+        // 关闭设置弹窗
+        function closeSettings() {
+            var modal = document.getElementById('settings-modal');
+            modal.classList.remove('show');
+        }
+        
+        // 清除设置输入框
+        function clearSettingInput(inputId) {
+            var input = document.getElementById(inputId);
+            input.value = '';
+            input.focus();
+        }
+        
+        // 加载设置
+        function loadSettings() {
+            var homeAddress = localStorage.getItem('homeAddress');
+            var companyAddress = localStorage.getItem('companyAddress');
+            var favoriteAddress = localStorage.getItem('favoriteAddress');
+            
+            if (homeAddress) {
+                document.getElementById('home-input').value = homeAddress;
+            }
+            if (companyAddress) {
+                document.getElementById('company-input').value = companyAddress;
+            }
+            if (favoriteAddress) {
+                document.getElementById('favorite-input').value = favoriteAddress;
+            }
+        }
+        
+        // 保存设置
+        function saveSettings() {
+            var homeAddress = document.getElementById('home-input').value.trim();
+            var companyAddress = document.getElementById('company-input').value.trim();
+            var favoriteAddress = document.getElementById('favorite-input').value.trim();
+            
+            if (homeAddress) {
+                localStorage.setItem('homeAddress', homeAddress);
+            } else {
+                localStorage.removeItem('homeAddress');
+            }
+            
+            if (companyAddress) {
+                localStorage.setItem('companyAddress', companyAddress);
+            } else {
+                localStorage.removeItem('companyAddress');
+            }
+            
+            if (favoriteAddress) {
+                localStorage.setItem('favoriteAddress', favoriteAddress);
+            } else {
+                localStorage.removeItem('favoriteAddress');
+            }
+            
+            // 关闭弹窗
+            closeSettings();
+        }
+        
+        // 切换下拉菜单显示状态
+        function toggleDropdown(type) {
+            var dropdownId = type + '-dropdown';
+            var dropdown = document.getElementById(dropdownId);
+            
+            // 关闭所有其他下拉菜单
+            ['start-dropdown', 'end-dropdown'].forEach(function(id) {
+                if (id !== dropdownId) {
+                    document.getElementById(id).classList.remove('show');
+                }
+            });
+            
+            // 切换当前下拉菜单
+            dropdown.classList.toggle('show');
+            
+            // 如果是显示状态，加载历史记录
+            if (dropdown.classList.contains('show')) {
+                loadSearchHistory(type);
+            }
+        }
+        
+        // 从下拉菜单选择地址
+        function selectFromDropdown(type, itemType) {
+            var address = '';
+            var addressName = '';
+            
+            switch(itemType) {
+                case 'home':
+                    address = localStorage.getItem('homeAddress');
+                    addressName = '家';
+                    break;
+                case 'company':
+                    address = localStorage.getItem('companyAddress');
+                    addressName = '公司';
+                    break;
+                case 'favorite':
+                    address = localStorage.getItem('favoriteAddress');
+                    addressName = '收藏';
+                    break;
+            }
+            
+            if (address) {
+                document.getElementById(type + 'input').value = address;
+                // 触发地点搜索以获取坐标
+                searchLocationForSetPoint(address, type);
+                saveStartEnd();
+                
+                // 不添加常用地址到历史记录
+                // addToSearchHistory(address, addressName);
+                
+                // 关闭下拉菜单
+                document.getElementById(type + '-dropdown').classList.remove('show');
+            } else {
+                showMessage('请先在设置中添加' + addressName + '地址');
+            }
+        }
+        
+        // 加载搜索历史记录
+        function loadSearchHistory(type) {
+            var historyKey = type + 'History';
+            var history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+            var historyContainer = document.getElementById(type + '-history');
+            
+            historyContainer.innerHTML = '';
+            
+            if (history.length === 0) {
+                var emptyItem = document.createElement('div');
+                emptyItem.className = 'dropdown-item';
+                emptyItem.textContent = '暂无历史记录';
+                emptyItem.style.cursor = 'default';
+                emptyItem.style.color = '#858585';
+                historyContainer.appendChild(emptyItem);
+            } else {
+                history.forEach(function(item, index) {
+                    var historyItem = document.createElement('div');
+                    historyItem.className = 'dropdown-item';
+                    historyItem.textContent = item.name;
+                    historyItem.onclick = function() {
+                        selectHistoryItem(type, item);
+                    };
+                    historyContainer.appendChild(historyItem);
+                });
+            }
+        }
+        
+        // 从历史记录选择
+        function selectHistoryItem(type, item) {
+            document.getElementById(type + 'input').value = item.address;
+            // 触发地点搜索以获取坐标
+            searchLocationForSetPoint(item.address, type);
+            saveStartEnd();
+            
+            // 更新历史记录（把选中的移到最前面）
+            updateSearchHistory(item.address, item.name, type);
+            
+            // 关闭下拉菜单
+            document.getElementById(type + '-dropdown').classList.remove('show');
+        }
+        
+        // 添加到搜索历史记录
+        function addToSearchHistory(address, name) {
+            ['start', 'end'].forEach(function(type) {
+                updateSearchHistory(address, name, type);
+            });
+        }
+        
+        // 检查是否为常用地址
+        function isCommonAddress(address) {
+            var homeAddress = localStorage.getItem('homeAddress');
+            var companyAddress = localStorage.getItem('companyAddress');
+            var favoriteAddress = localStorage.getItem('favoriteAddress');
+            
+            return address === homeAddress || address === companyAddress || address === favoriteAddress;
+        }
+        
+        // 更新搜索历史记录
+        function updateSearchHistory(address, name, type) {
+            // 不将常用地址添加到历史记录
+            if (isCommonAddress(address)) {
+                return;
+            }
+            
+            var historyKey = type + 'History';
+            var history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+            
+            // 检查是否已存在相同地址
+            var existingIndex = history.findIndex(function(item) {
+                return item.address === address;
+            });
+            
+            if (existingIndex !== -1) {
+                // 移除已存在的项
+                history.splice(existingIndex, 1);
+            }
+            
+            // 添加到最前面
+            history.unshift({
+                address: address,
+                name: name,
+                timestamp: Date.now()
+            });
+            
+            // 只保留最近5条记录
+            history = history.slice(0, 5);
+            
+            // 保存到本地存储
+            localStorage.setItem(historyKey, JSON.stringify(history));
+        }
+        
+        // 点击页面其他地方关闭下拉菜单
+        document.addEventListener('click', function(e) {
+            if (!e.target.matches('.autocomplete-dropdown') && !e.target.closest('.dropdown-menu')) {
+                ['start-dropdown', 'end-dropdown'].forEach(function(id) {
+                    document.getElementById(id).classList.remove('show');
+                });
+            }
+        });
+        
+        // 为设置点搜索位置
+        function searchLocationForSetPoint(address, type) {
+            var city = getCurrentCity();
+            var placeSearch = type === 'start' ? startPlaceSearch : endPlaceSearch;
+            
+            if (placeSearch) {
+                placeSearch.setCity(city);
+                placeSearch.search(address, function(status, result) {
+                    if (status === 'complete' && result.poiList && result.poiList.pois.length > 0) {
+                        var poi = result.poiList.pois[0];
+                        if (poi.location) {
+                            if (type === 'start') {
+                                startLocation = poi.location;
+                            } else {
+                                endLocation = poi.location;
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        // 显示消息
+        function showMessage(message) {
+            // 创建临时消息提示
+            var messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: #2d1b1b;
+                color: #f48771;
+                padding: 15px 20px;
+                border-radius: 4px;
+                border: 1px solid #8c2d2d;
+                z-index: 3000;
+                font-size: 14px;
+                font-family: Arial, sans-serif, 'Courier New', monospace;
+            `;
+            messageDiv.textContent = message;
+            document.body.appendChild(messageDiv);
+            
+            // 3秒后移除
+            setTimeout(function() {
+                if (messageDiv.parentNode) {
+                    messageDiv.parentNode.removeChild(messageDiv);
+                }
+            }, 3000);
+        }
+        
+        // 设置弹窗的自动完成功能
+        function setupSettingsAutocomplete() {
+            var city = getCurrentCity();
+            
+            // 创建地点搜索服务
+            if (!window.settingsPlaceSearch) {
+                window.settingsPlaceSearch = new AMap.PlaceSearch({
+                    city: city,
+                    pageSize: 5
+                });
+            }
+            
+            // 为每个设置输入框设置自动完成
+            setupInputSuggestion('home-input', window.settingsPlaceSearch, function(location) {
+                // 设置页面不需要保存坐标，只需要保存地址文本
+            });
+            
+            setupInputSuggestion('company-input', window.settingsPlaceSearch, function(location) {
+                // 设置页面不需要保存坐标，只需要保存地址文本
+            });
+            
+            setupInputSuggestion('favorite-input', window.settingsPlaceSearch, function(location) {
+                // 设置页面不需要保存坐标，只需要保存地址文本
+            });
+        }
+        
+        // 点击弹窗背景关闭
+        document.getElementById('settings-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSettings();
+            }
+        });
+        
         // 交换起点和终点
         function swapStartEnd() {
             var startInput = document.getElementById('startinput');
@@ -937,9 +1521,13 @@
             // 保存到本地存储
             saveStartEnd();
             
-            // 清空并重新设置自动完成
-            startLocation = null;
-            endLocation = null;
+            // 重新获取位置信息
+            if (startValue) {
+                searchLocationForSetPoint(startValue, 'end');
+            }
+            if (endValue) {
+                searchLocationForSetPoint(endValue, 'start');
+            }
         }
         
         // 获取当前城市
@@ -1125,20 +1713,22 @@
                     exit: ''          // 出站口
                 };
                 
-                // 优先从transit.lines数组获取线路名称（类似地铁的处理逻辑）
+                // 直接从transit.lines数组获取所有线路名称
                 if (segment.transit && segment.transit.lines && segment.transit.lines.length > 0) {
-                    var firstLine = segment.transit.lines[0];
-                    if (firstLine.name) {
-                        busInfo.line = firstLine.name;
+                    var lineNames = [];
+                    for (var i = 0; i < segment.transit.lines.length; i++) {
+                        var line = segment.transit.lines[i];
+                        if (line.name) {
+                            var lineName = line.name;
+                            // 如果线路数量超过两个，去掉每个线路名称中括号内的内容
+                            if (segment.transit.lines.length > 2) {
+                                lineName = lineName.replace(/\([^)]*\)/g, '');
+                            }
+                            lineNames.push(lineName);
+                        }
                     }
-                }
-                
-                // 如果没有从lines获取到线路名，再从指令中提取
-                if (!busInfo.line) {
-                    // 从指令中提取公交信息
-                    var lineMatch = instruction.match(/(\d+路|\d+号线|[A-Z\d]+路|[A-Z\d]+线|\w+公交)/i);
-                    if (lineMatch) {
-                        busInfo.line = lineMatch[1];
+                    if (lineNames.length > 0) {
+                        busInfo.line = lineNames.join('/');
                     }
                 }
                 
@@ -1151,6 +1741,8 @@
                     } else if (segment.transit.off_station) {
                         busInfo.direction = segment.transit.off_station.name;
                     }
+                } else {
+                    busInfo.direction = segment.transit.off_station.name;
                 }
                 
                 // 尝试获取起点和终点站
@@ -1200,19 +1792,22 @@
                     exit: ''          // 出站口
                 };
                                            
-                // 优先从transit.lines数组获取线路名称
+                // 直接从transit.lines数组获取所有线路名称
                 if (segment.transit && segment.transit.lines && segment.transit.lines.length > 0) {
-                    var firstLine = segment.transit.lines[0];
-                    if (firstLine.name) {
-                        subwayInfo.line = firstLine.name;
+                    var lineNames = [];
+                    for (var i = 0; i < segment.transit.lines.length; i++) {
+                        var line = segment.transit.lines[i];
+                        if (line.name) {
+                            var lineName = line.name;
+                            // 如果线路数量超过两个，去掉每个线路名称中括号内的内容
+                            if (segment.transit.lines.length > 2) {
+                                lineName = lineName.replace(/\([^)]*\)/g, '');
+                            }
+                            lineNames.push(lineName);
+                        }
                     }
-                }
-                
-                // 如果没有从lines获取到线路名，再从指令中提取
-                if (!subwayInfo.line) {
-                    var lineMatch = instruction.match(/(\d+号线|\w+线|Line\s*\w+)/i);
-                    if (lineMatch) {
-                        subwayInfo.line = lineMatch[1];
+                    if (lineNames.length > 0) {
+                        subwayInfo.line = lineNames.join('/');
                     }
                 }
                 
@@ -1431,10 +2026,6 @@
         
         // 渲染公交站点列表
         function renderBusStops(segment, segmentIndex, stepIndex) {
-            // 检查是否有公交站点信息
-            if (!segment.transit || !segment.transit.via_stops || segment.transit.via_stops.length === 0) {
-                return '';
-            }
             
             var uniqueId = 'bus-stops-' + segmentIndex + '-' + stepIndex;
             var stops = segment.transit.via_stops;
@@ -1465,8 +2056,8 @@
             if (segment.transit.off_station && segment.transit.off_station.name) {
                 totalStops++;
             }
-            // 途经站点数 = 总站点数 - 2（去掉上车站和下车站）
-            var viaStopsCount = Math.max(0, totalStops - 2);
+            // 途经站点数 = 总站点数 - 1（去掉上车站和下车站）
+            var viaStopsCount = Math.max(0, totalStops - 1);
             
             // 构建下车站信息（类似地铁的处理方式）
             var stationInfoHtml = '';
@@ -1490,10 +2081,6 @@
 
         // 渲染地铁站点列表
         function renderSubwayStops(segment, segmentIndex, stepIndex) {
-            // 检查是否有地铁站点信息
-            if (!segment.transit || !segment.transit.via_stops || segment.transit.via_stops.length === 0) {
-                return '';
-            }
             
             var uniqueId = 'subway-stops-' + segmentIndex + '-' + stepIndex;
             var stops = segment.transit.via_stops;
@@ -1900,7 +2487,17 @@
             document.getElementById('search-btn').disabled = false;
             
             if (status === 'complete' && result.plans && result.plans.length > 0) {
-
+                
+                // 成功获取路线，添加到历史记录
+                var startValue = document.getElementById('startinput').value.trim();
+                var endValue = document.getElementById('endinput').value.trim();
+                
+                if (startValue) {
+                    updateSearchHistory(startValue, startValue, 'start');
+                }
+                if (endValue) {
+                    updateSearchHistory(endValue, endValue, 'end');
+                }
                 
                 var routesHtml = '';
                 result.plans.forEach(function(plan, index) {
@@ -1912,7 +2509,7 @@
                 
             } else {
                 showError('路线规划失败：' + (result.info || '未知错误'));
-
+                
             }
         }
         
