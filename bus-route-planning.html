@@ -33,8 +33,18 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0 0;
-            height: 155px;
+            margin: 0 10px;
+            width: 40px;
+            height: 76px;
+        }
+        
+        .target-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 10px;
+            width: 40px;
+            height: 76px;
         }
         
         .swap-btn {
@@ -45,7 +55,7 @@
             color: white;
             border: none;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -61,6 +71,33 @@
         }
         
         .swap-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .target-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #4ec9b0;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s, transform 0.2s;
+            flex-shrink: 0;
+            line-height: 1;
+            padding: 0;
+        }
+        
+        .target-btn:hover {
+            background-color: #4ec9b0;
+            transform: scale(1.05);
+        }
+        
+        .target-btn:active {
             transform: scale(0.95);
         }
         
@@ -769,51 +806,50 @@
             </div>
         </div>
         <div class="input-group">
-            <div class="input-box" style="width: 90%;">
-                <div class="input-group">
-                    <div class="input-item-wide">
-                        <div class="input-item-prepend">
-                            <span class="input-item-text">起点</span>
-                        </div>
-                        <div class="autocomplete-container">
-                            <input id='startinput' type="text" placeholder="输入起点名称">
-                            <button class="clear-btn" onclick="clearInput('startinput')" title="清除内容">×</button>
-                            <button class="autocomplete-dropdown" onclick="toggleDropdown('start')" title="历史记录和常用地址">▼</button>
-                            <div id="start-dropdown" class="dropdown-menu">
-                                <div class="dropdown-item header">历史记录</div>
-                                <div id="start-history"></div>
-                                <div class="dropdown-item header">常用地址</div>
-                                <div class="dropdown-item" onclick="selectFromDropdown('start', 'home')">🏠 家</div>
-                                <div class="dropdown-item" onclick="selectFromDropdown('start', 'company')">🏢 公司</div>
-                                <div class="dropdown-item" onclick="selectFromDropdown('start', 'favorite')">⭐ 收藏</div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="input-item-wide">
+                <div class="input-item-prepend">
+                    <span class="input-item-text">起点</span>
                 </div>
-                
-                <div class="input-group">
-                    <div class="input-item-wide">
-                        <div class="input-item-prepend">
-                            <span class="input-item-text">终点</span>
-                        </div>
-                        <div class="autocomplete-container">
-                            <input id='endinput' type="text" placeholder="输入终点名称">
-                            <button class="clear-btn" onclick="clearInput('endinput')" title="清除内容">×</button>
-                            <button class="autocomplete-dropdown" onclick="toggleDropdown('end')" title="历史记录和常用地址">▼</button>
-                            <div id="end-dropdown" class="dropdown-menu">
-                                <div class="dropdown-item header">历史记录</div>
-                                <div id="end-history"></div>
-                                <div class="dropdown-item header">常用地址</div>
-                                <div class="dropdown-item" onclick="selectFromDropdown('end', 'home')">🏠 家</div>
-                                <div class="dropdown-item" onclick="selectFromDropdown('end', 'company')">🏢 公司</div>
-                                <div class="dropdown-item" onclick="selectFromDropdown('end', 'favorite')">⭐ 收藏</div>
-                            </div>
-                        </div>
+                <div class="autocomplete-container">
+                    <input id='startinput' type="text" placeholder="输入起点名称">
+                    <button class="clear-btn" onclick="clearInput('startinput')" title="清除内容">×</button>
+                    <button class="autocomplete-dropdown" onclick="toggleDropdown('start')" title="历史记录和常用地址">▼</button>
+                    <div id="start-dropdown" class="dropdown-menu">
+                        <div class="dropdown-item header">历史记录</div>
+                        <div id="start-history"></div>
+                        <div class="dropdown-item header">常用地址</div>
+                        <div class="dropdown-item" onclick="selectFromDropdown('start', 'home')">🏠 家</div>
+                        <div class="dropdown-item" onclick="selectFromDropdown('start', 'company')">🏢 公司</div>
+                        <div class="dropdown-item" onclick="selectFromDropdown('start', 'favorite')">⭐ 收藏</div>
                     </div>
                 </div>
             </div>
-            <div class="swap-container" style="width: 10%;">
+            <div class="swap-container">
                 <button id="swap-btn" class="swap-btn" onclick="swapStartEnd()" title="交换起终点">⇵</button>
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <div class="input-item-wide">
+                <div class="input-item-prepend">
+                    <span class="input-item-text">终点</span>
+                </div>
+                <div class="autocomplete-container">
+                    <input id='endinput' type="text" placeholder="输入终点名称">
+                    <button class="clear-btn" onclick="clearInput('endinput')" title="清除内容">×</button>
+                    <button class="autocomplete-dropdown" onclick="toggleDropdown('end')" title="历史记录和常用地址">▼</button>
+                    <div id="end-dropdown" class="dropdown-menu">
+                        <div class="dropdown-item header">历史记录</div>
+                        <div id="end-history"></div>
+                        <div class="dropdown-item header">常用地址</div>
+                        <div class="dropdown-item" onclick="selectFromDropdown('end', 'home')">🏠 家</div>
+                        <div class="dropdown-item" onclick="selectFromDropdown('end', 'company')">🏢 公司</div>
+                        <div class="dropdown-item" onclick="selectFromDropdown('end', 'favorite')">⭐ 收藏</div>
+                    </div>
+                </div>
+            </div>
+            <div class="target-container">
+                <button class="target-btn" onclick="locateTarget()" title="定位到终点">⌖</button>
             </div>
         </div>
         <button id="search-btn" class="search-btn">规划路线</button>
@@ -1419,7 +1455,7 @@
         });
         
         // 为设置点搜索位置
-        function searchLocationForSetPoint(address, type) {
+        function searchLocationForSetPoint(address, type, callback) {
             var city = getCurrentCity();
             var placeSearch = type === 'start' ? startPlaceSearch : endPlaceSearch;
             
@@ -1434,7 +1470,15 @@
                             } else {
                                 endLocation = poi.location;
                             }
+                            // 如果有回调函数，执行回调
+                            if (callback) {
+                                callback();
+                            }
+                        } else {
+                            showMessage('未找到该地址的位置信息');
                         }
+                    } else {
+                        showMessage('搜索地址失败，请检查地址是否正确');
                     }
                 });
             }
@@ -1528,6 +1572,45 @@
             if (endValue) {
                 searchLocationForSetPoint(endValue, 'start');
             }
+        }
+        
+        // 定位到终点
+        function locateTarget() {
+            var endInput = document.getElementById('endinput');
+            
+            // 检查终点输入框是否有内容
+            if (!endInput.value.trim()) {
+                showMessage('请先输入终点地址');
+                return;
+            }
+            
+            // 检查是否有终点位置信息
+            if (!endLocation) {
+                showMessage('正在获取终点位置信息，请稍候...');
+                // 重新搜索终点位置，搜索完成后自动跳转
+                searchLocationForSetPoint(endInput.value.trim(), 'end', function() {
+                    if (endLocation) {
+                        // 转换GCJ坐标到WGS坐标
+                        var wgsCoords = gcj2wgs_exact(endLocation.lat, endLocation.lng);
+                        
+                        // 生成om跳转链接
+                        var omLink = 'om://map?ll=' + wgsCoords.lat.toFixed(7) + ',' + wgsCoords.lng.toFixed(7);
+                        
+                        // 跳转到om地图
+                        window.location.href = omLink;
+                    }
+                });
+                return;
+            }
+            
+            // 转换GCJ坐标到WGS坐标
+            var wgsCoords = gcj2wgs_exact(endLocation.lat, endLocation.lng);
+            
+            // 生成om跳转链接
+            var omLink = 'om://map?ll=' + wgsCoords.lat.toFixed(7) + ',' + wgsCoords.lng.toFixed(7);
+            
+            // 跳转到om地图
+            window.location.href = omLink;
         }
         
         // 获取当前城市
