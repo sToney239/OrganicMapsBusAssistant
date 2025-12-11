@@ -808,10 +808,10 @@
         <div class="input-group">
             <div class="input-item-wide">
                 <div class="input-item-prepend">
-                    <span class="input-item-text">起点</span>
+                    <span class="input-item-text">出发地</span>
                 </div>
                 <div class="autocomplete-container">
-                    <input id='startinput' type="text" placeholder="输入起点名称">
+                    <input id='startinput' type="text" placeholder="输入出发地名称">
                     <button class="clear-btn" onclick="clearInput('startinput')" title="清除内容">×</button>
                     <button class="autocomplete-dropdown" onclick="toggleDropdown('start')" title="历史记录和常用地址">▼</button>
                     <div id="start-dropdown" class="dropdown-menu">
@@ -832,10 +832,10 @@
         <div class="input-group">
             <div class="input-item-wide">
                 <div class="input-item-prepend">
-                    <span class="input-item-text">终点</span>
+                    <span class="input-item-text">目的地</span>
                 </div>
                 <div class="autocomplete-container">
-                    <input id='endinput' type="text" placeholder="输入终点名称">
+                    <input id='endinput' type="text" placeholder="输入目的地名称">
                     <button class="clear-btn" onclick="clearInput('endinput')" title="清除内容">×</button>
                     <button class="autocomplete-dropdown" onclick="toggleDropdown('end')" title="历史记录和常用地址">▼</button>
                     <div id="end-dropdown" class="dropdown-menu">
@@ -2491,12 +2491,12 @@
             }
             
             if (!startKeyword) {
-                showError('请输入起点');
+                showError('请输入出发地');
                 return;
             }
             
             if (!endKeyword) {
-                showError('请输入终点');
+                showError('请输入目的地');
                 return;
             }
             
