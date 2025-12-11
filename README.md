@@ -1,8 +1,10 @@
 # 国内Organic Maps辅助工具
 
-- 本工具建议搭配[Organic Maps](https://organicmaps.app/)使用
-- 使用本工具需要[高德地图API](https://lbs.amap.com/)，如目前无高德地图API请自行搜索注册获取方式
-- 使用本工具前需要手动将HTML文件中的"your own api key"字段替换成你的高德地图API Key
+- 本工具建议搭配 [Organic Maps](https://organicmaps.app/) 使用
+- 使用本工具需要 [高德地图API](https://lbs.amap.com/) Key，如目前无高德地图API Key请自行搜索注册获取方式
+- 本工具文件主体为bus-route-planning.html，仅需将该文件下载到本地并用浏览器打开即可
+  - 使用本工具前需要手动将HTML文件中的`your own api key`字段替换成你的高德地图API Key
+
 
 ## 设计初衷
 
