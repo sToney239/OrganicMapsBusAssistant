@@ -4,13 +4,13 @@
 - 使用本工具需要 [高德地图API](https://lbs.amap.com/) Key
 
   - 本工具需要两个高德地图API Key，请分别申请Web端(JS API)和Web服务api，申请后应如图所示会有两个api Key和一个安全密钥
-    ![](pics\keyApplication.jpg)
+     <img src="pics/keyApplication.jpg" alt="申请Key" />
 
 - 本工具文件主体为bus-route-planning.html，仅需将该文件下载到本地并用浏览器打开即可
 
   - 使用前需手动更改bus-route-planning.html中的api Key相关信息（可以通过搜索字符串`******`快速定位到相关位置）
 
-    <img src="pics/keyModification.jpg" alt="基本页面" style="width:600px;" />
+    <img src="pics/keyModification.jpg" alt="替换脚本" style="width:600px;" />
 
   - 其中`webApiKey`对应`Web服务`的Key，`JSwebApiKey`对应`Web端`的Key，safetyKey对应`Web端`的安全密钥
 
