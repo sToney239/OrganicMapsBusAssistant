@@ -15,7 +15,7 @@
     <div class="city-input-container">
         <div class="city-label">城市</div>
         <div class="city-input-wrapper">
-            <input id='cityinput' type="text" placeholder="输入城市名称">
+            <input id='cityinput' type="text" placeholder="输入城市名称" value="北京市">
         </div>
     </div>
     
@@ -82,7 +82,7 @@
                     <span class="input-item-text">路线选择依据</span>
                 </div>
                 <div class="autocomplete-container">
-                    <input id="policy-select" type="text" readonly value="最快捷" data-value="0">
+                    <input id="policy-select" type="text" readonly value="默认" data-value="0">
                     <button class="autocomplete-dropdown" onclick="togglePolicyDropdown()" title="选择路线依据">▼</button>
                     <div id="policy-dropdown" class="dropdown-menu">
                         <div class="dropdown-item" onclick="selectPolicy('0', '默认')">默认</div>
