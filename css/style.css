@@ -314,21 +314,22 @@ html, body {
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: 12px;
+    font-size: 10px;
+    font-weight: bold;
     margin-right: 12px;
     flex-shrink: 0;
 }
 
 .step-icon.walk {
-    background-color: #01AF50;
-}
-
-.step-icon.bus {
-    background-color: #02B9D6;
+    background-color: #12B571;
 }
 
 .step-icon.metro {
-    background-color: #F3A643;
+    background-color: #0482BA;
+}
+
+.step-icon.bus {
+    background-color: #F67B4D;
 }
 
 .step-content {

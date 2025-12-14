@@ -122,7 +122,18 @@ function formatTimeForDisplay(timestamp) {
         return date.getMonth() + 1 + '月' + date.getDate() + '日 ' + timeString;
     }
 }
+//格式化json返回的时间信息
+function formatTime(input) {
+    // Ensure the input is a string
+    const timeString = input.toString();
 
+    // Pad with leading zeros if necessary and slice the string
+    const hours = timeString.slice(0, -2).padStart(2, '0');
+    const minutes = timeString.slice(-2).padEnd(2, '0');
+
+    // Return the formatted time
+    return `${hours}:${minutes}`;
+}
 // 设置自动完成
 function setupAutocomplete() {
     var city = getCurrentCity();
@@ -1244,7 +1255,10 @@ function formatBusInstruction(segment) {
             line: '',          // 公交线路
             direction: '',     // 方向
             stations: '',      // 乘坐站数
-            exit: ''          // 出站口
+            exit: '',          // 出站口
+            tips: '',
+            startTime: '',
+            endTime: ''
         };
 
         // 获取站点数据的来源
@@ -1311,6 +1325,16 @@ function formatBusInstruction(segment) {
             busInfo.direction = arrivalStop.name;
         }
 
+        if (linesSource[0].bus_time_tips && linesSource[0].bus_time_tips !== '') {
+            busInfo.tips = linesSource[0].bus_time_tips
+        }
+        if (linesSource[0].start_time && linesSource[0].start_time !== '') {
+            busInfo.startTime = formatTime(linesSource[0].start_time)
+        }
+        if (linesSource[0].end_time && linesSource[0].end_time !== '') {
+            busInfo.endTime = formatTime(linesSource[0].end_time)
+        }
+
         var result = '';
         var stationInfoHtml = '';
 
@@ -1325,10 +1349,16 @@ function formatBusInstruction(segment) {
 
         // 组合最终结果
         if (busInfo.line) {
-            result = busInfo.line;
+            result = "<div>"+busInfo.line + '</div>';;
+        }
+        if (busInfo.startTime && busInfo.endTime) {
+            result += '<div style="font-size: 12px;color: #8C8C8C">运营时间：' + busInfo.startTime+' - '+ busInfo.endTime+'</div>';
+        }
+        if (busInfo.tips) {
+            result += '<div style="font-size: 12px;color: #8C8C8C">' + busInfo.tips + '</div>';
         }
         if (stationInfoHtml) {
-            result = result ? (result + '<br>' + stationInfoHtml) : stationInfoHtml;
+            result = result ? (result +  stationInfoHtml) : stationInfoHtml;
         }
 
         return result || segment.instruction || ''; // 如果格式化失败，返回原始指令
@@ -1346,7 +1376,10 @@ function formatSubwayInstruction(segment) {
             line: '',          // 地铁线路
             direction: '',     // 方向
             stations: '',      // 乘坐站数
-            exit: ''          // 出站口
+            exit: '',          // 出站口
+            tips: '',
+            startTime: '',
+            endTime: ''
         };
 
         // 获取站点数据的来源
@@ -1411,6 +1444,21 @@ function formatSubwayInstruction(segment) {
             subwayInfo.direction = arrivalStop.name;
         }
 
+        
+        if (linesSource[0].bus_time_tips && linesSource[0].bus_time_tips !== '') {
+            subwayInfo.tips = linesSource[0].bus_time_tips
+        }
+        if (linesSource[0].start_time && linesSource[0].start_time !== '') {
+            subwayInfo.startTime = formatTime(linesSource[0].start_time)
+        } else if (linesSource[0].station_start_time && linesSource[0].station_start_time !== '') {
+            subwayInfo.startTime = formatTime(linesSource[0].station_start_time)
+        }
+        if (linesSource[0].end_time && linesSource[0].end_time !== '') {
+            subwayInfo.endTime = formatTime(linesSource[0].end_time)
+        } else if (linesSource[0].station_end_time && linesSource[0].station_end_time !== '') {
+            subwayInfo.endTime = formatTime(linesSource[0].station_end_time)
+        }
+        
         var result = '';
         var stationInfoHtml = '';
 
@@ -1425,10 +1473,16 @@ function formatSubwayInstruction(segment) {
 
         // 组合最终结果
         if (subwayInfo.line) {
-            result = subwayInfo.line;
+            result = "<div>"+subwayInfo.line + '</div>';;
+        }
+        if (subwayInfo.startTime && subwayInfo.endTime) {
+            result += '<div style="font-size: 12px;color: #8C8C8C">运营时间：' + subwayInfo.startTime+' - '+ subwayInfo.endTime+'</div>';
+        }
+        if (subwayInfo.tips) {
+            result += '<div style="font-size: 12px;color: #8C8C8C">' + subwayInfo.tips + '</div>';
         }
         if (stationInfoHtml) {
-            result = result ? (result + '<br>' + stationInfoHtml) : stationInfoHtml;
+            result = result ? (result +  stationInfoHtml) : stationInfoHtml;
         }
 
         return result || segment.instruction || ''; // 如果格式化失败，返回原始指令
@@ -1886,13 +1940,13 @@ function renderSingleStep(element, index, segments, routeIndex) {
     var iconClass, iconText;
     if (type === 'WALK') {
         iconClass = 'walk';
-        iconText = '步';
+        iconText = '步行';
     } else if (type === 'SUBWAY' || type === 'RAILWAY') {
         iconClass = 'metro';
-        iconText = '铁';
+        iconText = '地铁';
     } else {
         iconClass = 'bus';
-        iconText = '车';
+        iconText = '公交';
     }
 
     // 从当前元素数据中获取时间和距离信息
@@ -1959,9 +2013,6 @@ function renderSingleStep(element, index, segments, routeIndex) {
                 }
                 if (lineNames.length > 0) {
                     elementInstruction = lineNames.join('/');
-                    // if (firstLine.arrival_stop && firstLine.arrival_stop.name) {
-                    //     elementInstruction += '，下一站：' + firstLine.arrival_stop.name;
-                    // }
                     if (firstLine.departure_stop && firstLine.departure_stop.name) {
                         elementInstruction += '，上车站：' + firstLine.departure_stop.name;
                     }
@@ -2004,9 +2055,6 @@ function renderSingleStep(element, index, segments, routeIndex) {
                 });
                 if (lineNames.length > 0) {
                     elementInstruction = lineNames.join('/');
-                    // if (currentData.lines[0].arrival_stop && currentData.lines[0].arrival_stop.name) {
-                    //     elementInstruction += '，下一站：' + currentData.lines[0].arrival_stop.name;
-                    // }
                     if (currentData.buslines[0].departureStop && currentData.buslines[0].departureStop.name) {
                         elementInstruction += '，上车站：' + currentData.buslines[0].departureStop.name;
                     }
