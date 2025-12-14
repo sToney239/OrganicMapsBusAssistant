@@ -165,6 +165,11 @@
     
     <!-- 引入高德地图API -->
     <script type="text/javascript">
+        // 设置高德地图安全密钥（必须在加载API之前设置）
+        window._AMapSecurityConfig = {
+            securityJsCode: window.AMAP_CONFIG.safetyKey
+        };
+        
         document.write('<script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=' + window.AMAP_CONFIG.JSwebApiKey + '&plugin=AMap.PlaceSearch"><\/script>');
     </script>
     
