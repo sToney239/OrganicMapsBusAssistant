@@ -6,15 +6,9 @@
   - 本工具需要两个高德地图API Key，请分别申请Web端(JS API)和Web服务api，申请后应如图所示会有两个api Key和一个安全密钥
      <img src="pics/keyApplication.jpg" alt="申请Key" />
 
-- 本工具文件主体为bus-route-planning.html，仅需将该文件下载到本地并用浏览器打开即可
-
-  - 使用前需手动更改bus-route-planning.html中的api Key相关信息（可以通过搜索字符串`******`快速定位到相关位置）
-
-    <img src="pics/keyModification.jpg" alt="替换脚本" style="width:600px;" />
+- 本工具文件主体为index.html，或者点击本页面右上角的网页链接跳转，使用前请先在工具页面右上角的设置按钮中，设置对应的API Key值。
 
   - 其中`webApiKey`对应`Web服务`的Key，`JSwebApiKey`对应`Web端`的Key，safetyKey对应`Web端`的安全密钥
-
-
 
 ## 设计初衷
 

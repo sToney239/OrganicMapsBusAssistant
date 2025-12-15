@@ -633,6 +633,52 @@ html, body {
     color: #858585;
 }
 
+.api-config-toggle {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #3e3e42;
+    border-radius: 4px;
+    background-color: #3c3c3c;
+    color: #d4d4d4;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    transition: background-color 0.2s, border-color 0.2s;
+    margin-top: 5px;
+}
+
+.api-config-toggle:hover {
+    background-color: #404040;
+    border-color: #0078d4;
+}
+
+#api-toggle-icon {
+    transition: transform 0.3s ease;
+    font-size: 12px;
+}
+
+#api-toggle-icon.expanded {
+    transform: rotate(90deg);
+}
+
+.api-config-content {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #2d2d30;
+    border-radius: 4px;
+    border: 1px solid #3e3e42;
+}
+
+.api-config-content .setting-item {
+    margin-bottom: 15px;
+}
+
+.api-config-content .setting-item:last-child {
+    margin-bottom: 0;
+}
+
 .save-settings-btn {
     background-color: #3C3C3C;
     color: white;
@@ -799,26 +845,35 @@ html, body {
             </div>
             
             <div class="setting-item">
-                <label class="setting-label">高德地图Web服务API</label>
-                <div class="setting-input-group">
-                    <input id="webapi-key-input" type="text" class="setting-input" placeholder="输入高德地图Web服务API Key">
-                    <button class="clear-btn" onclick="clearSettingInput('webapi-key-input')" title="清除内容" style="right: 10px;">×</button>
-                </div>
-            </div>
-            
-            <div class="setting-item">
-                <label class="setting-label">高德地图Web端JS API</label>
-                <div class="setting-input-group">
-                    <input id="jswebapi-key-input" type="text" class="setting-input" placeholder="输入高德地图Web端JS API Key">
-                    <button class="clear-btn" onclick="clearSettingInput('jswebapi-key-input')" title="清除内容" style="right: 10px;">×</button>
-                </div>
-            </div>
-            
-            <div class="setting-item">
-                <label class="setting-label">高德地图Web端JS API 安全密钥</label>
-                <div class="setting-input-group">
-                    <input id="safety-key-input" type="text" class="setting-input" placeholder="输入高德地图Web端JS API 安全密钥">
-                    <button class="clear-btn" onclick="clearSettingInput('safety-key-input')" title="清除内容" style="right: 10px;">×</button>
+                <label class="setting-label">API密钥配置</label>
+                <button class="api-config-toggle" onclick="toggleApiConfig()" title="展开/收起API配置">
+                    <span id="api-toggle-icon">▶</span>
+                    <span id="api-toggle-text">展开配置</span>
+                </button>
+                <div id="api-config-content" class="api-config-content" style="display: none;">
+                    <div class="setting-item">
+                        <label class="setting-label">Web服务API Key</label>
+                        <div class="setting-input-group">
+                            <input id="webapi-key-input" type="text" class="setting-input" placeholder="输入高德地图Web服务API Key">
+                            <button class="clear-btn" onclick="clearSettingInput('webapi-key-input')" title="清除内容" style="right: 10px;">×</button>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <label class="setting-label">JS Web API Key</label>
+                        <div class="setting-input-group">
+                            <input id="jswebapi-key-input" type="text" class="setting-input" placeholder="输入高德地图JS Web API Key">
+                            <button class="clear-btn" onclick="clearSettingInput('jswebapi-key-input')" title="清除内容" style="right: 10px;">×</button>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <label class="setting-label">安全密钥</label>
+                        <div class="setting-input-group">
+                            <input id="safety-key-input" type="text" class="setting-input" placeholder="输入高德地图安全密钥">
+                            <button class="clear-btn" onclick="clearSettingInput('safety-key-input')" title="清除内容" style="right: 10px;">×</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -905,7 +960,7 @@ html, body {
                     <button class="clear-btn" onclick="clearInput('startinput')" title="清除内容">×</button>
                     <button class="autocomplete-dropdown" onclick="toggleDropdown('start')" title="历史记录和常用地址">▼</button>
                     <div id="start-dropdown" class="dropdown-menu">
-						<div class="dropdown-item header">常用地址</div>
+                        <div class="dropdown-item header">常用地址</div>
                         <div style="display: flex;justify-content: space-around;align-items: center;border-bottom: 1px solid #3e3e42;">
                             <div class="dropdown-item" onclick="selectFromDropdown('start', 'home')" style="border-bottom: 0px">🏠 家</div>
                             <div class="dropdown-item" onclick="selectFromDropdown('start', 'company')" style="border-bottom: 0px">🏢 公司</div>
@@ -931,7 +986,7 @@ html, body {
                     <button class="clear-btn" onclick="clearInput('endinput')" title="清除内容">×</button>
                     <button class="autocomplete-dropdown" onclick="toggleDropdown('end')" title="历史记录和常用地址">▼</button>
                     <div id="end-dropdown" class="dropdown-menu">
-						<div class="dropdown-item header">常用地址</div>
+                        <div class="dropdown-item header">常用地址</div>
                         <div style="display: flex;justify-content: space-around;align-items: center;border-bottom: 1px solid #3e3e42;">
                             <div class="dropdown-item" onclick="selectFromDropdown('end', 'home')" style="border-bottom: 0px">🏠 家</div>
                             <div class="dropdown-item" onclick="selectFromDropdown('end', 'company')" style="border-bottom: 0px">🏢 公司</div>
@@ -1545,6 +1600,25 @@ function clearSettingInput(inputId) {
     var input = document.getElementById(inputId);
     input.value = '';
     input.focus();
+}
+
+// 切换API配置折叠状态
+function toggleApiConfig() {
+    var content = document.getElementById('api-config-content');
+    var icon = document.getElementById('api-toggle-icon');
+    var text = document.getElementById('api-toggle-text');
+    
+    if (content.style.display === 'none') {
+        content.style.display = 'block';
+        icon.textContent = '▼';
+        icon.classList.add('expanded');
+        text.textContent = '收起配置';
+    } else {
+        content.style.display = 'none';
+        icon.textContent = '▶';
+        icon.classList.remove('expanded');
+        text.textContent = '展开配置';
+    }
 }
 
 // 加载设置
