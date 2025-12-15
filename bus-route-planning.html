@@ -904,12 +904,14 @@ html, body {
                     <button class="clear-btn" onclick="clearInput('startinput')" title="清除内容">×</button>
                     <button class="autocomplete-dropdown" onclick="toggleDropdown('start')" title="历史记录和常用地址">▼</button>
                     <div id="start-dropdown" class="dropdown-menu">
+						<div class="dropdown-item header">常用地址</div>
+                        <div style="display: flex;justify-content: space-around;align-items: center;border-bottom: 1px solid #3e3e42;">
+                            <div class="dropdown-item" onclick="selectFromDropdown('start', 'home')" style="border-bottom: 0px">🏠 家</div>
+                            <div class="dropdown-item" onclick="selectFromDropdown('start', 'company')" style="border-bottom: 0px">🏢 公司</div>
+                            <div class="dropdown-item" onclick="selectFromDropdown('start', 'favorite')" style="border-bottom: 0px">⭐ 收藏</div>
+                        </div>
                         <div class="dropdown-item header">历史记录</div>
                         <div id="start-history"></div>
-                        <div class="dropdown-item header">常用地址</div>
-                        <div class="dropdown-item" onclick="selectFromDropdown('start', 'home')">🏠 家</div>
-                        <div class="dropdown-item" onclick="selectFromDropdown('start', 'company')">🏢 公司</div>
-                        <div class="dropdown-item" onclick="selectFromDropdown('start', 'favorite')">⭐ 收藏</div>
                     </div>
                 </div>
             </div>
@@ -928,12 +930,14 @@ html, body {
                     <button class="clear-btn" onclick="clearInput('endinput')" title="清除内容">×</button>
                     <button class="autocomplete-dropdown" onclick="toggleDropdown('end')" title="历史记录和常用地址">▼</button>
                     <div id="end-dropdown" class="dropdown-menu">
+						<div class="dropdown-item header">常用地址</div>
+                        <div style="display: flex;justify-content: space-around;align-items: center;border-bottom: 1px solid #3e3e42;">
+                            <div class="dropdown-item" onclick="selectFromDropdown('end', 'home')" style="border-bottom: 0px">🏠 家</div>
+                            <div class="dropdown-item" onclick="selectFromDropdown('end', 'company')" style="border-bottom: 0px">🏢 公司</div>
+                            <div class="dropdown-item" onclick="selectFromDropdown('end', 'favorite')" style="border-bottom: 0px">⭐ 收藏</div>
+                        </div>
                         <div class="dropdown-item header">历史记录</div>
                         <div id="end-history"></div>
-                        <div class="dropdown-item header">常用地址</div>
-                        <div class="dropdown-item" onclick="selectFromDropdown('end', 'home')">🏠 家</div>
-                        <div class="dropdown-item" onclick="selectFromDropdown('end', 'company')">🏢 公司</div>
-                        <div class="dropdown-item" onclick="selectFromDropdown('end', 'favorite')">⭐ 收藏</div>
                     </div>
                 </div>
             </div>
