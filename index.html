@@ -786,7 +786,7 @@ html, body {
     <div class="city-input-container">
         <div class="city-label">城市</div>
         <div class="city-input-wrapper">
-            <input id='cityinput' type="text" placeholder="输入城市名称">
+            <input id='cityinput' type="text" placeholder="输入城市名称" value="北京市">
         </div>
     </div>
     
@@ -794,8 +794,32 @@ html, body {
     <div id="settings-modal" class="settings-modal">
         <div class="settings-card">
             <div class="settings-header">
-                <h2 class="settings-title">设置常用地址</h2>
+                <h2 class="settings-title">设置</h2>
                 <button class="close-btn" onclick="closeSettings()">×</button>
+            </div>
+            
+            <div class="setting-item">
+                <label class="setting-label">高德地图Web服务API</label>
+                <div class="setting-input-group">
+                    <input id="webapi-key-input" type="text" class="setting-input" placeholder="输入高德地图Web服务API Key">
+                    <button class="clear-btn" onclick="clearSettingInput('webapi-key-input')" title="清除内容" style="right: 10px;">×</button>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <label class="setting-label">高德地图Web端JS API</label>
+                <div class="setting-input-group">
+                    <input id="jswebapi-key-input" type="text" class="setting-input" placeholder="输入高德地图Web端JS API Key">
+                    <button class="clear-btn" onclick="clearSettingInput('jswebapi-key-input')" title="清除内容" style="right: 10px;">×</button>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <label class="setting-label">高德地图Web端JS API 安全密钥</label>
+                <div class="setting-input-group">
+                    <input id="safety-key-input" type="text" class="setting-input" placeholder="输入高德地图Web端JS API 安全密钥">
+                    <button class="clear-btn" onclick="clearSettingInput('safety-key-input')" title="清除内容" style="right: 10px;">×</button>
+                </div>
             </div>
             
             <div class="setting-item">
@@ -858,8 +882,8 @@ html, body {
                     <div id="policy-dropdown" class="dropdown-menu">
                         <div class="dropdown-item" onclick="selectPolicy('0', '默认')">默认</div>
                         <div class="dropdown-item" onclick="selectPolicy('1', '最经济')">最经济</div>
-                        <div class="dropdown-item" onclick="selectPolicy('2', '最少换乘')">最少换乘</div>
-                        <div class="dropdown-item" onclick="selectPolicy('3', '最少步行')">最少步行</div>
+                        <div class="dropdown-item" onclick="selectPolicy('2', '少换乘')">少换乘</div>
+                        <div class="dropdown-item" onclick="selectPolicy('3', '少步行')">少步行</div>
                         <div class="dropdown-item" onclick="selectPolicy('4', '最舒适')">最舒适</div>
                         <div class="dropdown-item" onclick="selectPolicy('5', '不乘地铁')">不乘地铁</div>
                         <div class="dropdown-item" onclick="selectPolicy('7', '地铁优先')">地铁优先</div>
@@ -939,24 +963,32 @@ html, body {
     </div>  
     <!-- 引入高德地图API -->
     <script type="text/javascript">
-		// API Keys 配置
-		window.AMAP_CONFIG = {
-			// 用于高德地图web服务API
-			webApiKey: '******',
-
+        // 初始化API配置为空，从localStorage加载
+        function initializeAPIConfig() {
+            var savedWebApiKey = localStorage.getItem('webApiKey');
+            var savedJSWebApiKey = localStorage.getItem('JSwebApiKey');
+            var savedSafetyKey = localStorage.getItem('safetyKey');
             
-			// 用于高德地图Web端JS API
-			JSwebApiKey: '******',
-
-            // 用于高德地图Web端JS API 安全密钥
-			safetyKey: '******'
-		};
-        // 设置高德地图安全密钥（必须在加载API之前设置）
-        window._AMapSecurityConfig = {
-            securityJsCode: window.AMAP_CONFIG.safetyKey
-        };
+            window.AMAP_CONFIG = {
+                webApiKey: savedWebApiKey || '',
+                JSwebApiKey: savedJSWebApiKey || '',
+                safetyKey: savedSafetyKey || ''
+            };
+            
+            // 只有在JSwebApiKey和safetyKey都被设置后，才加载高德地图API
+            if (window.AMAP_CONFIG.JSwebApiKey && window.AMAP_CONFIG.safetyKey) {
+                // 设置高德地图安全密钥（必须在加载API之前设置）
+                window._AMapSecurityConfig = {
+                    securityJsCode: window.AMAP_CONFIG.safetyKey
+                };
+                
+                // 动态加载高德地图API
+                document.write('<script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=' + window.AMAP_CONFIG.JSwebApiKey + '&plugin=AMap.PlaceSearch"><\/script>');
+            }
+        }
         
-        document.write('<script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=' + window.AMAP_CONFIG.JSwebApiKey + '&plugin=AMap.PlaceSearch"><\/script>');
+        // 初始化API配置
+        initializeAPIConfig();
     </script>
     
     <!-- 引入城市编码数据 -->
@@ -1067,6 +1099,15 @@ window.addEventListener('DOMContentLoaded', function () {
         currentCity = savedCity;
         // 设置当前城市编码
         updateCurrentCityCode(savedCity);
+    } else {
+        // 如果没有保存的城市，使用默认的北京市
+        var defaultCity = '北京市';
+        document.getElementById('cityinput').value = defaultCity;
+        currentCity = defaultCity;
+        // 设置北京市的编码
+        currentCityCode = '010';
+        // 保存默认城市
+        localStorage.setItem('selectedCity', defaultCity);
     }
 
     // 不恢复上一次的起点和终点，保持空白
@@ -1183,6 +1224,14 @@ function formatTime(input) {
 }
 // 设置自动完成
 function setupAutocomplete() {
+    // 检查高德地图API是否已加载
+    try {
+        checkAmapAPILoaded();
+    } catch (error) {
+        console.warn('自动完成功能暂时不可用:', error.message);
+        return;
+    }
+    
     var city = getCurrentCity();
 
     // 如果PlaceSearch服务不存在，则创建新的；否则只更新城市设置
@@ -1503,7 +1552,22 @@ function loadSettings() {
     var homeAddress = localStorage.getItem('homeAddress');
     var companyAddress = localStorage.getItem('companyAddress');
     var favoriteAddress = localStorage.getItem('favoriteAddress');
+    var webApiKey = localStorage.getItem('webApiKey');
+    var JSwebApiKey = localStorage.getItem('JSwebApiKey');
+    var safetyKey = localStorage.getItem('safetyKey');
 
+    // 加载API密钥
+    if (webApiKey) {
+        document.getElementById('webapi-key-input').value = webApiKey;
+    }
+    if (JSwebApiKey) {
+        document.getElementById('jswebapi-key-input').value = JSwebApiKey;
+    }
+    if (safetyKey) {
+        document.getElementById('safety-key-input').value = safetyKey;
+    }
+
+    // 加载地址
     if (homeAddress) {
         document.getElementById('home-input').value = homeAddress;
     }
@@ -1520,7 +1584,30 @@ function saveSettings() {
     var homeAddress = document.getElementById('home-input').value.trim();
     var companyAddress = document.getElementById('company-input').value.trim();
     var favoriteAddress = document.getElementById('favorite-input').value.trim();
+    var webApiKey = document.getElementById('webapi-key-input').value.trim();
+    var JSwebApiKey = document.getElementById('jswebapi-key-input').value.trim();
+    var safetyKey = document.getElementById('safety-key-input').value.trim();
 
+    // 保存API密钥
+    if (webApiKey) {
+        localStorage.setItem('webApiKey', webApiKey);
+    } else {
+        localStorage.removeItem('webApiKey');
+    }
+
+    if (JSwebApiKey) {
+        localStorage.setItem('JSwebApiKey', JSwebApiKey);
+    } else {
+        localStorage.removeItem('JSwebApiKey');
+    }
+
+    if (safetyKey) {
+        localStorage.setItem('safetyKey', safetyKey);
+    } else {
+        localStorage.removeItem('safetyKey');
+    }
+
+    // 保存地址
     if (homeAddress) {
         localStorage.setItem('homeAddress', homeAddress);
     } else {
@@ -1537,6 +1624,27 @@ function saveSettings() {
         localStorage.setItem('favoriteAddress', favoriteAddress);
     } else {
         localStorage.removeItem('favoriteAddress');
+    }
+
+    // 更新API配置
+    var oldConfig = window.AMAP_CONFIG || {};
+    window.AMAP_CONFIG = {
+        webApiKey: webApiKey || '',
+        JSwebApiKey: JSwebApiKey || '',
+        safetyKey: safetyKey || ''
+    };
+
+    // 检查是否需要重新加载页面（如果JS API Key或安全密钥发生了变化）
+    if (oldConfig.JSwebApiKey !== window.AMAP_CONFIG.JSwebApiKey || 
+        oldConfig.safetyKey !== window.AMAP_CONFIG.safetyKey) {
+        
+        // 如果新的配置都设置了，提示用户重新加载页面
+        if (window.AMAP_CONFIG.JSwebApiKey && window.AMAP_CONFIG.safetyKey) {
+            showMessage('API配置已更新，页面将重新加载以应用新配置');
+            setTimeout(function() {
+                window.location.reload();
+            }, 2000);
+        }
     }
 
     // 关闭弹窗
@@ -1762,6 +1870,14 @@ function showMessage(message) {
 
 // 设置弹窗的自动完成功能
 function setupSettingsAutocomplete() {
+    // 检查高德地图API是否已加载
+    try {
+        checkAmapAPILoaded();
+    } catch (error) {
+        console.warn('设置自动完成功能暂时不可用:', error.message);
+        return;
+    }
+    
     var city = getCurrentCity();
 
     // 创建地点搜索服务
@@ -1925,9 +2041,17 @@ function locateTarget() {
     window.location.href = omLink;
 }
 
+// 检查高德地图API是否已加载
+function checkAmapAPILoaded() {
+    if (typeof AMap === 'undefined') {
+        throw new Error('高德地图API未加载，请先在设置中配置JS Web API Key和安全密钥');
+    }
+    return true;
+}
+
 // 获取当前城市
 function getCurrentCity() {
-    return document.getElementById('cityinput').value.trim() || '全国';
+    return document.getElementById('cityinput').value.trim() || '北京市';
 }
 
 // 初始化城市数据
@@ -3232,6 +3356,17 @@ function showError(message) {
 
 // 搜索路线 - Web API版本
 function searchRoute() {
+    // 检查API配置
+    try {
+        checkAmapAPILoaded();
+        if (!window.AMAP_CONFIG || !window.AMAP_CONFIG.webApiKey) {
+            throw new Error('请先在设置中配置Web API Key');
+        }
+    } catch (error) {
+        showError(error.message);
+        return;
+    }
+    
     var city = document.getElementById('cityinput').value.trim();
     var startKeyword = document.getElementById('startinput').value.trim();
     var endKeyword = document.getElementById('endinput').value.trim();
@@ -3300,6 +3435,11 @@ function searchRoute() {
 
 // 使用Web API进行公交路径规划
 function searchTransitRouteWebAPI(startLoc, endLoc, city, departureTime) {
+    // 检查webApiKey是否已设置
+    if (!window.AMAP_CONFIG || !window.AMAP_CONFIG.webApiKey) {
+        throw new Error('请先在设置中配置Web API Key');
+    }
+    
     // 构建API请求URL
     var baseUrl = 'https://restapi.amap.com/v5/direction/transit/integrated';
     var params = new URLSearchParams();
