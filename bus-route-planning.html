@@ -74,32 +74,6 @@ html, body {
     transform: scale(0.95);
 }
 
-.target-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #4ec9b0;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s, transform 0.2s;
-    flex-shrink: 0;
-    line-height: 1;
-    padding: 0;
-}
-
-.target-btn:hover {
-    background-color: #4ec9b0;
-    transform: scale(1.05);
-}
-
-.target-btn:active {
-    transform: scale(0.95);
-}
 
 .input-item {
     flex: 1;
@@ -856,12 +830,12 @@ html, body {
         <h1 style="text-align: center; color: #cccccc; margin-bottom: 15px; font-weight: 300; font-size: 24px;padding-top: 30px;">公共交通路线规划</h1>
         
         <div class="input-group">
-            <div class="input-item" style="flex: 6.5;">
+            <div class="input-item" style="flex: 4;">
                 <div class="input-item-prepend">
                     <span class="input-item-text">出发时间</span>
                 </div>
                 <div class="autocomplete-container">
-                    <input id='departuretime' type="text" placeholder="现在出发，或输入8:30、14:30等">
+                    <input id='departuretime' type="text" placeholder="现在出发">
                     <button class="clear-btn" onclick="clearDepartureTime()" title="清除时间">×</button>
                     <button class="autocomplete-dropdown" onclick="toggleTimeDropdown()" title="快速选择时间">▼</button>
                     <div id="time-dropdown" class="dropdown-menu">
@@ -874,7 +848,7 @@ html, body {
                     </div>
                 </div>
             </div>
-            <div class="input-item" style="flex: 3.5;">
+            <div class="input-item" style="flex: 3;">
                 <div class="input-item-prepend">
                     <span class="input-item-text">路线选择依据</span>
                 </div>
@@ -893,6 +867,9 @@ html, body {
                     </div>
                 </div>
             </div>
+            <div class="swap-container">
+                <button id="swap-btn" class="swap-btn" onclick="swapStartEnd()" title="交换起终点">⇵</button>
+            </div>
         </div>
         <div class="input-group">
             <div class="input-item-wide">
@@ -904,17 +881,19 @@ html, body {
                     <button class="clear-btn" onclick="clearInput('startinput')" title="清除内容">×</button>
                     <button class="autocomplete-dropdown" onclick="toggleDropdown('start')" title="历史记录和常用地址">▼</button>
                     <div id="start-dropdown" class="dropdown-menu">
+                        <div class="dropdown-item header">常用地址</div>
+                        <div style="display: flex;justify-content: space-around;align-items: center;border-bottom: 1px solid #3e3e42;">
+                            <div class="dropdown-item" onclick="selectFromDropdown('start', 'home')" style="border-bottom: 0px">🏠 家</div>
+                            <div class="dropdown-item" onclick="selectFromDropdown('start', 'company')" style="border-bottom: 0px">🏢 公司</div>
+                            <div class="dropdown-item" onclick="selectFromDropdown('start', 'favorite')" style="border-bottom: 0px">⭐ 收藏</div>
+                        </div>
                         <div class="dropdown-item header">历史记录</div>
                         <div id="start-history"></div>
-                        <div class="dropdown-item header">常用地址</div>
-                        <div class="dropdown-item" onclick="selectFromDropdown('start', 'home')">🏠 家</div>
-                        <div class="dropdown-item" onclick="selectFromDropdown('start', 'company')">🏢 公司</div>
-                        <div class="dropdown-item" onclick="selectFromDropdown('start', 'favorite')">⭐ 收藏</div>
                     </div>
                 </div>
             </div>
             <div class="swap-container">
-                <button id="swap-btn" class="swap-btn" onclick="swapStartEnd()" title="交换起终点">⇵</button>
+                <button id="locate-btn" class="swap-btn" onclick="locateStart()" title="定位到起点" style="font-size: 28px;">⌖</button>
             </div>
         </div>
         
@@ -928,17 +907,19 @@ html, body {
                     <button class="clear-btn" onclick="clearInput('endinput')" title="清除内容">×</button>
                     <button class="autocomplete-dropdown" onclick="toggleDropdown('end')" title="历史记录和常用地址">▼</button>
                     <div id="end-dropdown" class="dropdown-menu">
+                        <div class="dropdown-item header">常用地址</div>
+                        <div style="display: flex;justify-content: space-around;align-items: center;border-bottom: 1px solid #3e3e42;">
+                            <div class="dropdown-item" onclick="selectFromDropdown('end', 'home')" style="border-bottom: 0px">🏠 家</div>
+                            <div class="dropdown-item" onclick="selectFromDropdown('end', 'company')" style="border-bottom: 0px">🏢 公司</div>
+                            <div class="dropdown-item" onclick="selectFromDropdown('end', 'favorite')" style="border-bottom: 0px">⭐ 收藏</div>
+                        </div>
                         <div class="dropdown-item header">历史记录</div>
                         <div id="end-history"></div>
-                        <div class="dropdown-item header">常用地址</div>
-                        <div class="dropdown-item" onclick="selectFromDropdown('end', 'home')">🏠 家</div>
-                        <div class="dropdown-item" onclick="selectFromDropdown('end', 'company')">🏢 公司</div>
-                        <div class="dropdown-item" onclick="selectFromDropdown('end', 'favorite')">⭐ 收藏</div>
                     </div>
                 </div>
             </div>
             <div class="target-container">
-                <button class="target-btn" onclick="locateTarget()" title="定位到终点">⌖</button>
+                <button id="target-btn" class="swap-btn" onclick="locateTarget()" title="定位到终点" style="font-size: 22px;">↗</button>
             </div>
         </div>
         <button id="search-btn" class="search-btn">规划路线</button>
@@ -1054,7 +1035,13 @@ function gcj2wgs_exact(gcjLat, gcjLng) {
     }
     return { lat: newLat, lng: newLng };
 }
-
+function wgs2gcj(wgsLat, wgsLng) {
+	if (outOfChina(wgsLat, wgsLng)) {
+		return {lat: wgsLat, lng: wgsLng};
+	}
+	var d = delta(wgsLat, wgsLng);
+	return {lat: wgsLat + d.lat, lng: wgsLng + d.lng};
+}
 
     </script>
     <script type="text/javascript">
@@ -1832,6 +1819,71 @@ function swapStartEnd() {
     if (endValue) {
         searchLocationForSetPoint(endValue, 'start');
     }
+}
+
+// 定位到起点
+function locateStart() {
+    // 检查浏览器是否支持地理定位
+    if (!navigator.geolocation) {
+        showMessage('您的浏览器不支持地理定位功能');
+        return;
+    }
+
+    showMessage('正在获取当前位置...');
+
+    // 获取当前位置
+    navigator.geolocation.getCurrentPosition(
+        function(position) {
+            try {
+                // 获取GPS坐标（WGS-84坐标系）
+                var wgsLat = position.coords.latitude;
+                var wgsLng = position.coords.longitude;
+
+                // 转换为GCJ-02坐标系（高德地图使用）
+                var gcjCoords = wgs2gcj(wgsLat, wgsLng);
+
+                // 设置起点输入框的值
+                document.getElementById('startinput').value = '当前位置';
+
+                // 保存起点坐标信息，用于后续路线规划
+                startLocation = {
+                    lat: gcjCoords.lat,
+                    lng: gcjCoords.lng
+                };
+
+                // 保存起点信息
+                saveStartEnd();
+
+                showMessage('定位成功，已设置为起点');
+            } catch (error) {
+                console.error('定位处理错误:', error);
+                showMessage('定位信息处理失败');
+            }
+        },
+        function(error) {
+            var errorMessage = '';
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = '用户拒绝了地理定位请求';
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = '位置信息不可用';
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = '定位请求超时';
+                    break;
+                case error.UNKNOWN_ERROR:
+                    errorMessage = '定位发生未知错误';
+                    break;
+            }
+            showMessage(errorMessage);
+        },
+        {
+            enableHighAccuracy: true,    // 启用高精度定位
+            timeout: 10000,              // 10秒超时
+            maximumAge: 300000           // 5分钟内的缓存位置也接受
+        }
+    );
 }
 
 // 定位到终点
