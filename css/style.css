@@ -24,19 +24,23 @@ html, body {
 .swap-container {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
     margin: 0 10px;
     width: 40px;
     height: 76px;
+    padding-bottom: 5px;
+    box-sizing: border-box;
 }
 
 .target-container {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
     margin: 0 10px;
     width: 40px;
     height: 76px;
+    padding-bottom: 5px;
+    box-sizing: border-box;
 }
 
 .swap-btn {
@@ -69,12 +73,12 @@ html, body {
 
 .input-item {
     flex: 1;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
 .input-item-wide {
     flex: 1;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
 .input-item-prepend {

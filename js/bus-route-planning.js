@@ -39,26 +39,39 @@ function applyUrlParameters() {
     // 设置出发地
     if (params.start) {
         document.getElementById('startinput').value = params.start;
-        // 触发地点搜索以获取坐标
-        setTimeout(function() {
-            searchLocationForSetPoint(params.start, 'start');
-        }, 500);
+        
+        // 直接设置经纬度（如果URL中有）
+        if (params.startLat && params.startLng) {
+            startLocation = {
+                lat: parseFloat(params.startLat),
+                lng: parseFloat(params.startLng)
+            };
+        } else {
+            // 如果没有经纬度信息，触发地点搜索获取坐标
+            setTimeout(function() {
+                searchLocationForSetPoint(params.start, 'start');
+            }, 500);
+        }
         hasParams = true;
     }
     
     // 设置目的地
     if (params.end) {
         document.getElementById('endinput').value = params.end;
-        // 触发地点搜索以获取坐标
-        setTimeout(function() {
-            searchLocationForSetPoint(params.end, 'end');
-        }, 500);
+        
+        // 直接设置经纬度（如果URL中有）
+        if (params.endLat && params.endLng) {
+            endLocation = {
+                lat: parseFloat(params.endLat),
+                lng: parseFloat(params.endLng)
+            };
+        } else {
+            // 如果没有经纬度信息，触发地点搜索获取坐标
+            setTimeout(function() {
+                searchLocationForSetPoint(params.end, 'end');
+            }, 500);
+        }
         hasParams = true;
-    }
-    
-    // 如果有URL参数，显示提示信息
-    if (hasParams) {
-        showMessage('已根据URL参数自动填充表单');
     }
 }
 
@@ -278,7 +291,10 @@ function setupInputSuggestion(inputId, placeSearch, onLocationSet) {
                 inputElement.value = item.name + ' - ' + item.address;
                 if (item.location) {
                     onLocationSet(item.location);
-
+                    
+                    // 添加到历史记录，包含经纬度信息
+                    var inputType = inputId.replace('input', ''); // 从inputId获取类型（start或end）
+                    updateSearchHistory(item.name + ' - ' + item.address, item.name, inputType, item.location.lat, item.location.lng);
                 }
                 hideSuggestions();
             });
@@ -725,20 +741,36 @@ function loadSearchHistory(type) {
 // 从历史记录选择
 function selectHistoryItem(type, item) {
     document.getElementById(type + 'input').value = item.address;
-    // 触发地点搜索以获取坐标
-    searchLocationForSetPoint(item.address, type);
+    
+    // 如果历史记录中有经纬度信息，直接设置
+    if (item.lat && item.lng) {
+        if (type === 'start') {
+            startLocation = {
+                lat: parseFloat(item.lat),
+                lng: parseFloat(item.lng)
+            };
+        } else {
+            endLocation = {
+                lat: parseFloat(item.lat),
+                lng: parseFloat(item.lng)
+            };
+        }
+    } else {
+        // 如果没有经纬度信息，触发地点搜索获取坐标
+        searchLocationForSetPoint(item.address, type);
+    }
 
     // 更新历史记录（把选中的移到最前面）
-    updateSearchHistory(item.address, item.name, type);
+    updateSearchHistory(item.address, item.name, type, item.lat, item.lng);
 
     // 关闭下拉菜单
     document.getElementById(type + '-dropdown').classList.remove('show');
 }
 
 // 添加到搜索历史记录
-function addToSearchHistory(address, name) {
+function addToSearchHistory(address, name, lat, lng) {
     ['start', 'end'].forEach(function (type) {
-        updateSearchHistory(address, name, type);
+        updateSearchHistory(address, name, type, lat, lng);
     });
 }
 
@@ -752,7 +784,7 @@ function isCommonAddress(address) {
 }
 
 // 更新搜索历史记录
-function updateSearchHistory(address, name, type) {
+function updateSearchHistory(address, name, type, lat, lng) {
     // 不将常用地址添加到历史记录
     if (isCommonAddress(address)) {
         return;
@@ -772,11 +804,19 @@ function updateSearchHistory(address, name, type) {
     }
 
     // 添加到最前面
-    history.unshift({
+    var historyItem = {
         address: address,
         name: name,
         timestamp: Date.now()
-    });
+    };
+    
+    // 如果有经纬度信息，也保存到历史记录
+    if (lat && lng) {
+        historyItem.lat = lat.toString();
+        historyItem.lng = lng.toString();
+    }
+    
+    history.unshift(historyItem);
 
     // 只保留最近5条记录
     history = history.slice(0, 5);
@@ -810,6 +850,10 @@ function searchLocationForSetPoint(address, type, callback) {
                     } else {
                         endLocation = poi.location;
                     }
+                    
+                    // 保存到历史记录，包含经纬度信息
+                    updateSearchHistory(address, address, type, poi.location.lat, poi.location.lng);
+                    
                     // 如果有回调函数，执行回调
                     if (callback) {
                         callback();
@@ -948,6 +992,9 @@ function locateStart() {
                     lat: gcjCoords.lat,
                     lng: gcjCoords.lng
                 };
+                
+                // 保存当前位置到历史记录，包含经纬度信息
+                updateSearchHistory('当前位置', '当前位置', 'start', gcjCoords.lat, gcjCoords.lng);
 
                 showMessage('定位成功，已设置为起点');
             } catch (error) {
@@ -2481,10 +2528,14 @@ function handleWebAPIResult(data) {
         var endValue = document.getElementById('endinput').value.trim();
 
         if (startValue) {
-            updateSearchHistory(startValue, startValue, 'start');
+            var startLat = startLocation ? startLocation.lat : null;
+            var startLng = startLocation ? startLocation.lng : null;
+            updateSearchHistory(startValue, startValue, 'start', startLat, startLng);
         }
         if (endValue) {
-            updateSearchHistory(endValue, endValue, 'end');
+            var endLat = endLocation ? endLocation.lat : null;
+            var endLng = endLocation ? endLocation.lng : null;
+            updateSearchHistory(endValue, endValue, 'end', endLat, endLng);
         }
 
         // 转换Web API数据格式为原来的格式
@@ -2647,5 +2698,93 @@ function updateSearchCity() {
     if (city !== currentCity) {
         currentCity = city;
         setupAutocomplete();
+    }
+}
+
+// 生成分享链接
+async function generateShareLink() {
+    var city = document.getElementById('cityinput').value.trim();
+    var start = document.getElementById('startinput').value.trim();
+    var end = document.getElementById('endinput').value.trim();
+    
+    // 构建基础URL
+    var baseUrl = window.location.origin + window.location.pathname;
+    var params = [];
+    
+    // 添加参数
+    if (city) {
+        params.push('city=' + encodeURIComponent(city));
+    }
+    if (start) {
+        // 只截取前10个字符
+        var truncatedStart = start.length > 15 ? start.substring(0, 15) : start;
+        params.push('start=' + encodeURIComponent(truncatedStart));
+        
+        // 添加起点经纬度（如果有）
+        if (startLocation) {
+            params.push('startLat=' + startLocation.lat);
+            params.push('startLng=' + startLocation.lng);
+        }
+    }
+    if (end) {
+        // 只截取前10个字符
+        var truncatedEnd = end.length > 15 ? end.substring(0, 15) : end;
+        params.push('end=' + encodeURIComponent(truncatedEnd));
+        
+        // 添加终点经纬度（如果有）
+        if (endLocation) {
+            params.push('endLat=' + endLocation.lat);
+            params.push('endLng=' + endLocation.lng);
+        }
+    }
+    
+    // 构建完整URL
+    var shareUrl = baseUrl;
+    if (params.length > 0) {
+        shareUrl += '?' + params.join('&');
+    }
+    
+    // 复制到剪贴板
+    await copyToClipboard(shareUrl);
+}
+
+// 复制文本到剪贴板
+async function copyToClipboard(text) {
+    try {
+        // 优先使用现代的Clipboard API（推荐方法）
+        if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+            showMessage('链接已复制到剪贴板');
+            return;
+        }
+    } catch (error) {
+        console.warn('Clipboard API failed:', error);
+    }
+    
+    // 降级到旧方法（兼容旧浏览器，但有deprecated警告）
+    try {
+        // 创建临时文本框
+        var tempInput = document.createElement('textarea');
+        tempInput.value = text;
+        tempInput.style.position = 'fixed';
+        tempInput.style.left = '-9999px';
+        tempInput.style.top = '-9999px';
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        
+        // 尝试复制
+        var successful = document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        
+        if (successful) {
+            showMessage('链接已复制到剪贴板');
+        } else {
+            showMessage('链接生成失败');
+        }
+    } catch (err) {
+        if (document.body.contains(tempInput)) {
+            document.body.removeChild(tempInput);
+        }
+        console.warn('Clipboard API failed:', err);
     }
 }

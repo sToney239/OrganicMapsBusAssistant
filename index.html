@@ -182,10 +182,15 @@
                 </div>
             </div>
             <div class="target-container">
-                <button id="target-btn" class="swap-btn" onclick="locateTarget()" title="定位到终点" style="font-size: 22px;">↗</button>
+                <button id="target-btn" class="swap-btn" onclick="locateTarget()" title="定位到终点" style="font-size: 22px;transform: rotate(-90deg);transform-origin: center;">⤵</button>
             </div>
         </div>
-        <button id="search-btn" class="search-btn">规划路线</button>
+        <div style="display: flex; gap: 10px;">
+            <button id="search-btn" class="search-btn" style="flex: 1;">规划路线</button>
+            <div class="target-container">
+                <button id="share-btn" class="swap-btn" onclick="generateShareLink()" title="生成分享链接" style="font-size: 12px; margin: 0;">➜]</button>
+            </div> 
+        </div>
         
 
         
