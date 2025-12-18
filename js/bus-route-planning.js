@@ -2788,3 +2788,87 @@ async function copyToClipboard(text) {
         console.warn('Clipboard API failed:', err);
     }
 }
+
+// 构建高德地图路线规划链接
+function buildAmapRouteUrl(startLat, startLng, endLat, endLng) {
+    // 检测设备类型
+    var isAndroid = /Android/i.test(navigator.userAgent);
+    var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    
+    // 确定前缀
+    var prefix = 'androidamap://route/plan/?sourceApplication=appname';
+    if (isIOS) {
+        prefix = 'iosamap://route/plan/?sourceApplication=appname';
+    }
+    
+    // 构建完整的URL
+    var url = prefix + 
+        '&slat=' + startLat + 
+        '&slon=' + startLng + 
+        '&dlat=' + endLat + 
+        '&dlon=' + endLng + 
+        '&dev=0' + 
+        '&t=1';
+    
+    return url;
+}
+
+// 在高德地图中打开路线规划
+function openInAmap() {
+    var startKeyword = document.getElementById('startinput').value.trim();
+    var endKeyword = document.getElementById('endinput').value.trim();
+
+    // 检查是否有起点和终点
+    if (!startKeyword) {
+        showMessage('请先输入出发地');
+        return;
+    }
+
+    if (!endKeyword) {
+        showMessage('请先输入目的地');
+        return;
+    }
+
+    // 检查是否有经纬度信息
+    if (!startLocation || !endLocation) {
+        showMessage('正在获取位置信息，请稍候...');
+        
+        // 搜索起点和终点坐标
+        var city = getCurrentCity();
+        var startSearchPromise = new Promise(function (resolve) {
+            if (startLocation) {
+                resolve(startLocation);
+            } else {
+                searchLocation(startKeyword, city, true, resolve);
+            }
+        });
+
+        var endSearchPromise = new Promise(function (resolve) {
+            if (endLocation) {
+                resolve(endLocation);
+            } else {
+                searchLocation(endKeyword, city, false, resolve);
+            }
+        });
+
+        Promise.all([startSearchPromise, endSearchPromise]).then(function (locations) {
+            var startLoc = locations[0];
+            var endLoc = locations[1];
+
+            if (!startLoc || !endLoc) {
+                showMessage('无法找到起点或终点的位置信息');
+                return;
+            }
+
+            // 使用GCJ-02坐标（高德地图坐标系）直接跳转
+            var amapUrl = buildAmapRouteUrl(startLoc.lat, startLoc.lng, endLoc.lat, endLoc.lng);
+            window.location.href = amapUrl;
+        }).catch(function (error) {
+            showMessage('获取位置信息失败：' + error.message);
+        });
+    } else {
+        // 直接使用已有的坐标信息跳转
+        var amapUrl = buildAmapRouteUrl(startLocation.lat, startLocation.lng, endLocation.lat, endLocation.lng);
+        window.location.href = amapUrl;
+    }
+}
