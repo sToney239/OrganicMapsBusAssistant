@@ -1048,7 +1048,7 @@ function locateTarget() {
                 var wgsCoords = gcj2wgs_exact(endLocation.lat, endLocation.lng);
 
                 // 生成om跳转链接
-                var omLink = 'om://map?ll=' + wgsCoords.lat.toFixed(7) + ',' + wgsCoords.lng.toFixed(7);
+                var omLink = 'om://map?ll=' + wgsCoords.lat.toFixed(6) + ',' + wgsCoords.lng.toFixed(6);
 
                 // 跳转到om地图
                 window.location.href = omLink;
@@ -1061,7 +1061,7 @@ function locateTarget() {
     var wgsCoords = gcj2wgs_exact(endLocation.lat, endLocation.lng);
 
     // 生成om跳转链接
-    var omLink = 'om://map?ll=' + wgsCoords.lat.toFixed(7) + ',' + wgsCoords.lng.toFixed(7);
+    var omLink = 'om://map?ll=' + wgsCoords.lat.toFixed(6) + ',' + wgsCoords.lng.toFixed(6);
 
     // 跳转到om地图
     window.location.href = omLink;
@@ -1771,8 +1771,8 @@ function generateWalkOMLink(segment) {
         daddr = encodeURIComponent(daddr);
 
         // 生成OM链接
-        var omLink = 'om://route?sll=' + startWgs.lat.toFixed(7) + ',' + startWgs.lng.toFixed(7) +
-            '&saddr=' + saddr + '&dll=' + endWgs.lat.toFixed(7) + ',' + endWgs.lng.toFixed(7) +
+        var omLink = 'om://route?sll=' + startWgs.lat.toFixed(6) + ',' + startWgs.lng.toFixed(6) +
+            '&saddr=' + saddr + '&dll=' + endWgs.lat.toFixed(6) + ',' + endWgs.lng.toFixed(6) +
             '&daddr=' + daddr + '&type=pedestrian';
 
 
@@ -2870,5 +2870,65 @@ function openInAmap() {
         // 直接使用已有的坐标信息跳转
         var amapUrl = buildAmapRouteUrl(startLocation.lat, startLocation.lng, endLocation.lat, endLocation.lng);
         window.location.href = amapUrl;
+    }
+}
+
+// 复制高德地图路线规划链接
+function copyAmapRouteLink() {
+    var startKeyword = document.getElementById('startinput').value.trim();
+    var endKeyword = document.getElementById('endinput').value.trim();
+
+    // 检查是否有起点和终点
+    if (!startKeyword) {
+        showMessage('请先输入出发地');
+        return;
+    }
+
+    if (!endKeyword) {
+        showMessage('请先输入目的地');
+        return;
+    }
+
+    // 检查是否有经纬度信息
+    if (!startLocation || !endLocation) {
+        showMessage('正在获取位置信息，请稍候...');
+        
+        // 搜索起点和终点坐标
+        var city = getCurrentCity();
+        var startSearchPromise = new Promise(function (resolve) {
+            if (startLocation) {
+                resolve(startLocation);
+            } else {
+                searchLocation(startKeyword, city, true, resolve);
+            }
+        });
+
+        var endSearchPromise = new Promise(function (resolve) {
+            if (endLocation) {
+                resolve(endLocation);
+            } else {
+                searchLocation(endKeyword, city, false, resolve);
+            }
+        });
+
+        Promise.all([startSearchPromise, endSearchPromise]).then(function (locations) {
+            var startLoc = locations[0];
+            var endLoc = locations[1];
+
+            if (!startLoc || !endLoc) {
+                showMessage('无法找到起点或终点的位置信息');
+                return;
+            }
+
+            // 使用GCJ-02坐标构建链接并复制
+            var amapUrl = buildAmapRouteUrl(startLoc.lat, startLoc.lng, endLoc.lat, endLoc.lng);
+            copyToClipboard(amapUrl, '高德地图路线链接已复制到剪贴板');
+        }).catch(function (error) {
+            showMessage('获取位置信息失败：' + error.message);
+        });
+    } else {
+        // 直接使用已有的坐标信息构建链接并复制
+        var amapUrl = buildAmapRouteUrl(startLocation.lat, startLocation.lng, endLocation.lat, endLocation.lng);
+        copyToClipboard(amapUrl, '高德地图路线链接已复制到剪贴板');
     }
 }
