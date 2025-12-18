@@ -2873,7 +2873,7 @@ function openInAmap() {
     }
 }
 
-// 复制高德地图路线规划链接（支持富文本格式）
+// 复制高德地图路线规划链接
 function copyAmapRouteLink() {
     var startKeyword = document.getElementById('startinput').value.trim();
     var endKeyword = document.getElementById('endinput').value.trim();
@@ -2922,43 +2922,13 @@ function copyAmapRouteLink() {
 
             // 使用GCJ-02坐标构建链接并复制
             var amapUrl = buildAmapRouteUrl(startLoc.lat, startLoc.lng, endLoc.lat, endLoc.lng);
-            copyRichTextLink(amapUrl, startKeyword, endKeyword);
+            copyToClipboard(amapUrl, '高德地图路线链接已复制到剪贴板');
         }).catch(function (error) {
             showMessage('获取位置信息失败：' + error.message);
         });
     } else {
         // 直接使用已有的坐标信息构建链接并复制
         var amapUrl = buildAmapRouteUrl(startLocation.lat, startLocation.lng, endLocation.lat, endLocation.lng);
-        copyRichTextLink(amapUrl, startKeyword, endKeyword);
-    }
-}
-
-// 复制富文本格式的链接
-function copyRichTextLink(amapUrl, startKeyword, endKeyword) {
-    // 创建一个临时的div来生成HTML内容
-    var tempDiv = document.createElement('div');
-    tempDiv.innerHTML = '高德地图路线：' + startKeyword + ' → ' + endKeyword + '<br><a href="' + amapUrl + '">点击打开高德地图导航</a><br>链接地址：' + amapUrl;
-    
-    // 尝试使用新的Clipboard API复制富文本
-    if (navigator.clipboard && navigator.clipboard.write) {
-        var htmlContent = tempDiv.innerHTML;
-        var plainText = '高德地图路线：' + startKeyword + ' → ' + endKeyword + '\n链接地址：' + amapUrl;
-        
-        // 创建ClipboardItem对象，包含HTML和纯文本两种格式
-        var clipboardItem = new ClipboardItem({
-            'text/html': new Blob([htmlContent], { type: 'text/html' }),
-            'text/plain': new Blob([plainText], { type: 'text/plain' })
-        });
-        
-        navigator.clipboard.write([clipboardItem]).then(function() {
-            showMessage('高德地图路线链接已复制（支持富文本格式）');
-        }).catch(function(err) {
-            // 如果富文本复制失败，回退到普通复制
-            console.warn('富文本复制失败，使用普通复制:', err);
-            copyToClipboard(amapUrl, '高德地图路线链接已复制到剪贴板');
-        });
-    } else {
-        // 浏览器不支持新的Clipboard API，使用传统方法
         copyToClipboard(amapUrl, '高德地图路线链接已复制到剪贴板');
     }
 }
