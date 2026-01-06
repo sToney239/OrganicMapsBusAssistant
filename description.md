@@ -16,7 +16,7 @@
 
 ## 开源地图软件？可能还行，但还行似乎不大可能
 
-<img src="pics/014d695edc62c2589c49e8cd45c383c2.png" alt="GitHub上的Organic Maps页面" style="max-width: 25%;"/>
+<img src="pics/014d695edc62c2589c49e8cd45c383c2.png" alt="GitHub上的Organic Maps页面" style="width:300px;"/>
 
 我在F-Droid这个安卓的开源应用商店上随便用map关键字进行搜索，发现了[Organic Maps](https://github.com/organicmaps/organicmaps)这个软件，看起来是个很良善的软件，标榜自己不会tracking，听起来不错。
 
@@ -34,7 +34,7 @@
 
 可令人遗憾的是，bd09和gcj02是可以互转的，但wgs84到gcj02就是一个，至少是我们外界看来不可逆的转换，当然其实很容易搜到这样的转换代码，比如[这里](https://github.com/googollee/eviltransform)。但是这样的转换代码也只是让我们拿到的gcj02的坐标，尽可能地转换到逼近wgs84的坐标。
 
-<img src="pics/90fbe8bcd3497bca9f5a7ddac7eeee03.png" alt="大概是这样一个过程" style="max-width: 25%;"/>
+<img src="pics/90fbe8bcd3497bca9f5a7ddac7eeee03.png" alt="大概是这样一个过程" style="width:300px;"/>
 
 剩下的就是从地图软件厂商那里获取数据了，如果要举例子的话，可以参考百度地图的这样一个[示例的网站](https://lbsyun.baidu.com/webapi/demo-center?serviceid=15)，在上面的搜索框中输入地名，就会返回经纬度坐标。这样的一个网页，应该就是百度地图期望的，用户能用API制作出来的东西。
 
@@ -44,7 +44,7 @@
 
 所以我其实只想做一个轻量的HTML工具，而在这样的工具里，获取了目标点位的经纬度坐标、实现坐标转换。如果这时候能有个快速跳转那可就太好了。不过好在Organic Maps是提供了[这样的API的](https://omaps.app/api)，实现起来也并不复杂。
 
-<img src="pics\5dd6e1ff70734822838aef8605f2dc77.gif" alt="" style="max-width: 25%;"/>
+<img src="pics\5dd6e1ff70734822838aef8605f2dc77.gif" alt="" style="width:300px;"/>
 
   
 
