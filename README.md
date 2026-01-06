@@ -1,5 +1,6 @@
 # 国内Organic Maps辅助工具
 
+- 工具制作动机参考[这里](description.md)
 - 本工具建议搭配 [Organic Maps](https://organicmaps.app/) 使用
 - 使用本工具需要 [高德地图API](https://lbs.amap.com/) Key
 
