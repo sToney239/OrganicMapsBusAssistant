@@ -16,7 +16,7 @@
 
 ## 开源地图软件？可能还行，但还行似乎不大可能
 
-<img src="pics/014d695edc62c2589c49e8cd45c383c2.png" alt="GitHub上的Organic Maps页面" style="width:300px;"/>
+<img src="pics/014d695edc62c2589c49e8cd45c383c2.png" alt="GitHub上的Organic Maps页面" style="width:600px;"/>
 
 我在F-Droid这个安卓的开源应用商店上随便用map关键字进行搜索，发现了[Organic Maps](https://github.com/organicmaps/organicmaps)这个软件，看起来是个很良善的软件，标榜自己不会tracking，听起来不错。
 
@@ -34,7 +34,7 @@
 
 可令人遗憾的是，bd09和gcj02是可以互转的，但wgs84到gcj02就是一个，至少是我们外界看来不可逆的转换，当然其实很容易搜到这样的转换代码，比如[这里](https://github.com/googollee/eviltransform)。但是这样的转换代码也只是让我们拿到的gcj02的坐标，尽可能地转换到逼近wgs84的坐标。
 
-<img src="pics/90fbe8bcd3497bca9f5a7ddac7eeee03.png" alt="大概是这样一个过程" style="width:300px;"/>
+<img src="pics/90fbe8bcd3497bca9f5a7ddac7eeee03.png" alt="大概是这样一个过程" style="width:600px;"/>
 
 剩下的就是从地图软件厂商那里获取数据了，如果要举例子的话，可以参考百度地图的这样一个[示例的网站](https://lbsyun.baidu.com/webapi/demo-center?serviceid=15)，在上面的搜索框中输入地名，就会返回经纬度坐标。这样的一个网页，应该就是百度地图期望的，用户能用API制作出来的东西。
 
@@ -60,7 +60,7 @@
 
 不过这里其实也有一个预设是，不会太路痴、能接受没有太多的定位辅助、而通过仅仅看信息并不完备的地图，就已经能够满足自己的寻路需求。说到底在国内使用Organic Maps就是这样，要考验用户能不能正常使用一个信息不完备的地图app。我自己是比较能接受的，毋宁说我更倾向于大多数时候关掉定位，仅仅通过看地图来判断要怎么抵达目的地，当然这可能因为我还是学生，没有那么多急事，也可能是我习惯于提前抵达，留出的时间余裕，正好允许我进行这样的探索。
 
-<img src="pics\ac1302934104b5719e3f03c6dceeb05f.gif" alt="" />
+<img src="pics\ac1302934104b5719e3f03c6dceeb05f.gif" alt="" style="width:300px;"/>
 
 这两个HTML的页面小工具我都放在了[GitHub](https://github.com/sToney239/OrganicMapsBusAssistant)，其中search-location.html是前一个工具，bus-route-planning.html是后一个工具，这两个都无法直接使用，需要找到其中的「your own API key」字样并替换成你的API key，至于怎么获取这样的key可以在网上用关键词简单地搜索应该就能做到。【补记】目前两个页面的功能已经进行了合并，具体使用方法请参见GitHub页面中的Readme文件。
 
