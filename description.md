@@ -16,7 +16,7 @@
 
 ## 开源地图软件？可能还行，但还行似乎不大可能
 
-![GitHub上的Organic Maps页面](pics\014d695edc62c2589c49e8cd45c383c2.png)
+![GitHub上的Organic Maps页面](pics/014d695edc62c2589c49e8cd45c383c2.png)
 
 
 
@@ -36,7 +36,7 @@
 
 可令人遗憾的是，bd09和gcj02是可以互转的，但wgs84到gcj02就是一个，至少是我们外界看来不可逆的转换，当然其实很容易搜到这样的转换代码，比如[这里](https://github.com/googollee/eviltransform)。但是这样的转换代码也只是让我们拿到的gcj02的坐标，尽可能地转换到逼近wgs84的坐标。
 
-![大概是这样一个过程](pics\90fbe8bcd3497bca9f5a7ddac7eeee03.png)
+![大概是这样一个过程](pics/90fbe8bcd3497bca9f5a7ddac7eeee03.png)
 
 
 
@@ -48,7 +48,7 @@
 
 所以我其实只想做一个轻量的HTML工具，而在这样的工具里，获取了目标点位的经纬度坐标、实现坐标转换。如果这时候能有个快速跳转那可就太好了。不过好在Organic Maps是提供了[这样的API的](https://omaps.app/api)，实现起来也并不复杂。
 
-![](C:\Users\sToney\Documents\GitHub\OrganicMapsBusAssistant\pics\5dd6e1ff70734822838aef8605f2dc77.gif)
+![](pics/5dd6e1ff70734822838aef8605f2dc77.gif)
 
   
 
@@ -64,7 +64,7 @@
 
 不过这里其实也有一个预设是，不会太路痴、能接受没有太多的定位辅助、而通过仅仅看信息并不完备的地图，就已经能够满足自己的寻路需求。说到底在国内使用Organic Maps就是这样，要考验用户能不能正常使用一个信息不完备的地图app。我自己是比较能接受的，毋宁说我更倾向于大多数时候关掉定位，仅仅通过看地图来判断要怎么抵达目的地，当然这可能因为我还是学生，没有那么多急事，也可能是我习惯于提前抵达，留出的时间余裕，正好允许我进行这样的探索。
 
-![](C:\Users\sToney\Documents\GitHub\OrganicMapsBusAssistant\pics\ac1302934104b5719e3f03c6dceeb05f.gif)
+![](pics/ac1302934104b5719e3f03c6dceeb05f.gif)
 
   
 
