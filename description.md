@@ -62,7 +62,7 @@
 
 <img src="pics\ac1302934104b5719e3f03c6dceeb05f.gif" alt="" style="width:300px;"/>
 
-这两个HTML的页面小工具我都放在了[GitHub](https://github.com/sToney239/OrganicMapsBusAssistant)，其中search-location.html是前一个工具，bus-route-planning.html是后一个工具，这两个都无法直接使用，需要找到其中的「your own API key」字样并替换成你的API key，至于怎么获取这样的key可以在网上用关键词简单地搜索应该就能做到。【补记】目前两个页面的功能已经进行了合并，具体使用方法请参见GitHub页面中的Readme文件。
+
 
 如果你要问我，我这通折腾难道不是更多的妥协吗，那我必须承认，是这样的，我就是利用这些地图软件厂商提供的公共交通规划，来补全Organic Maps的不足。甚至对比我最初的那个不登录软件的策略，现在可能倒退得更多。不登录软件的话，地图软件厂商可能很难确定到我这样一个用户，可是我现在反而是一直在用个人的API key告诉厂商我可能就是有这样的出行需求，我就在这附近的什么地方……
 
